@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       var userId = response.id;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Attendence(value: userId)),
+        MaterialPageRoute(builder: (context) => SecondScreen(value: userId)),
       );
     } else {
       print("in else");
@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     hintText: 'UserName',
                     border: OutlineInputBorder(
                         borderRadius:
-                            BorderRadius.all(Radius.circular(radius)))),
+                          BorderRadius.all(Radius.circular(radius)))),
               ),
               Padding(padding: EdgeInsets.all(5)),
               TextField(
@@ -98,7 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     _login(userNameController.text, passwordController.text);
                   },
-                  child: Text("LOGIN"))
+                  child: Text("LOGIN")
+                  )
             ],
           ),
         ),

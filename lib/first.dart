@@ -1,153 +1,65 @@
 import 'package:flutter/material.dart';
 import 'services.dart';
+import 'dart:convert';
+import 'classes/attendence.dart';
 
-class Attendence extends StatefulWidget {
+class SecondScreen extends StatefulWidget {
   final String value;
-  Attendence({Key key, this.value}) : super(key: key);
+  SecondScreen({Key key, this.value}) : super(key: key);
 
   @override
-  _AttendenceState createState() => _AttendenceState();
+  _SecondScreenState createState() => _SecondScreenState();
 }
 
-class _AttendenceState extends State<Attendence> {
+class _SecondScreenState extends State<SecondScreen> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Attendence'),
-      ),
-      body: Center(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-          child: Center(
-          child: Column(
-          children: <Widget>[
-            FlatButton(
-                color: Colors.blue,
-                onPressed: () {
-                  _fillAttendence(widget.value);
-                },
-                child: Text("Fill Attenedence")
-                ),
-                Table(                
-                  border: TableBorder.all(color: Colors.black),
-                  children: <TableRow>[
-                    TableRow(
-                      children: <Widget>[
-                        FittedBox(
-                          child: Center(
-                            child: Text("Date",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1,
-                              )
-                            ),
-                          ),
-                        ),
-                        FittedBox(
-                          child: Center(
-                            child: Text("Day",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1,
-                              )
-                            ),
-                          ),
-                        ),
-                        FittedBox(
-                          child: Center(
-                            child: Text("Hours \n in \n office",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1,
-                              )
-                            ),
-                          ),
-                        ),
-                        FittedBox(
-                          child: Center(
-                            child: Text("Action",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1,
-                              )
-                            ),
-                          ),
-                        ),
-                      ]
-                    ),
-                    TableRow(
-                      children: <Widget>[
-                        FittedBox(
-                          child: Center(
-                            child: Text("17-10-2019",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1,
-                              )
-                            ),
-                          ),
-                        ),
-                        FittedBox(
-                          child: Center(
-                            child: Text("Thursday",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1,
-                              )
-                            ),
-                          ),
-                        ),
-                        FittedBox(
-                          child: Center(
-                            child: Text("5:00",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1,
-                              )
-                            ),
-                          ),
-                        ),
-                        FittedBox(
-                          child: Center(
-                            child: Text("View",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 1,
-                              )
-                            ),
-                          ),
-                        ),
-                      ] 
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
+        appBar: AppBar(
+          title: Text('Attendence'),
         ),
-      ),
-    );
+        body:
+          FutureBuilder<Attendence>(
+          future: _fillAttendence(widget.value),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) return Text(snapshot.hasData.toString());
+            print("snapshot++++++++++++++++++" + snapshot.data.id);
+            var data = snapshot.data;
+            
+            ListTile _buildItemsForListView(BuildContext context, int index) {
+              if (index < data.timeLog.length) {
+                return ListTile(
+                  title: Row(children: <Widget>[
+                    Expanded(child: Text(data.timeLog[index].inTime)),
+                    Expanded(child: Text(data.timeLog[index].outTime)),
+                  ]),
+                );
+              }
+            }
+
+            return ListView.builder(
+              itemBuilder: _buildItemsForListView,
+            );
+          },
+        ));
+
+       
+      
+      
   }
 
-  _fillAttendence(String userId) async {
-    print("in first===========>");
+  Future<Attendence> _fillAttendence(String userId) async {
+    print("in first=================>");
     var response = await fillAttendence(userId);
     if (response != null) {
-      print("in if ====> "+response);
+      print("returning here also..." + response.toString());
+      return response;
     } else {
-      showDialog(
+      print("in else");
+      return showDialog(
         context: context,
         builder: (BuildContext context) {
-          // return object of type Dialog
           return AlertDialog(
             title: new Text("Something went wrong"),
           );
@@ -156,3 +68,9 @@ class _AttendenceState extends State<Attendence> {
     }
   }
 }
+
+
+
+
+
+
