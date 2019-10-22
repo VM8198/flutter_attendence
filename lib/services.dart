@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'classes/user.dart';
 import 'classes/attendence.dart';
 
 // const baseUrl = 'https://attendence.raoinformationtechnology.com:4000/';
- const baseUrl = 'http://192.168.1.50:4000/';
+ const baseUrl = 'http://192.168.1.50:5000/';
 
 Future login(String uname, String password) async {
   var body = {'email': uname, 'password': password};
@@ -30,16 +31,50 @@ Future<Attendence> fillAttendence(String userId) async {
   var body = {userId: userId};
   var response = await http.post(baseUrl + "attendance/fill-attendance", body: body);
   if(response.statusCode == 200){
-    print("in service positive");
     var jsonResponse = json.decode(response.body);
     var attendence = Attendence.fromJson(jsonResponse[0]);
-    print("yes returning...."+attendence.toString());
     return attendence;
   }else{
-    print("in else");
     return null;
   }
 }
+
+Future<Attendence> getAttendenceById(String userId) async {    
+  var body = {userId: userId};  
+  var response = await http.post(baseUrl + "attendance/get-attendance-by-id", body: body);
+  if(response.statusCode == 200){
+    var jsonResponse = json.decode(response.body);
+    var attendence = Attendence.fromJson(jsonResponse[0]);
+    return attendence;
+  }else return null;
+}
+
+Future<MultipleDaysLogs> getMultipleDaysLogs(String userId) async{
+  var body = {userId: userId, 'days': '5'};  
+  var response = await http.post(baseUrl + "attendance/get-attendance-by-id", body: body);
+  if(response.statusCode == 200){
+    var jsonResponse = json.decode(response.body);
+    var multipleDaysLogs = MultipleDaysLogs.fromJson(jsonResponse);
+    return multipleDaysLogs; 
+  }else return null;
+}
+
+// Future<Attendence> getLastFiveDaysLogs(String userId) async {
+//   print("last days service");
+//   var body = {"userId": userId, "days": 5};
+//   var response = await http.post(baseUrl + "attendance/get-attendance-by-id", body: body);
+//   if(response.statusCode == 200){
+//     print("in last days.............");
+//     var jsonResponse = json.decode(response.body);
+//     var attendence = Attendence.fromJson(jsonResponse[0]);
+//     print("yes returning...."+attendence.toString());
+//     return attendence;
+//   }else{
+//     print("in else");
+//     return null;
+//   }
+// }
+
 
 
 

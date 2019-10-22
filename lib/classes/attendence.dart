@@ -28,10 +28,10 @@ class Attendence {
     var timeLogs = json['timeLog'] as List;
     List<TimeLog> finalLogs = timeLogs.map((i)=>TimeLog.fromJson(i)).toList();
     return Attendence(
-      changes: json['changes'] as String,
+      changes: json['changed'] as String,
       id: json['_id'] as String,
       status: json['status'] as String,
-      difference: json['difference'] as String,
+      difference: json['diffrence'] as String,
       day: json['day'] as String,
       absentCount: json['absentCount'] as String,
       userId: json['userId'] as String,
@@ -54,3 +54,15 @@ class TimeLog {
       );
   }
 }
+
+class MultipleDaysLogs {
+  final List<Attendence> multipleDaysLogs;
+
+  MultipleDaysLogs({this.multipleDaysLogs});
+
+  factory MultipleDaysLogs.fromJson(List<dynamic> multiJson){
+    List<Attendence> attendence = new List<Attendence>();
+    attendence = multiJson.map((i)=>Attendence.fromJson(i)).toList();
+    return MultipleDaysLogs(multipleDaysLogs: attendence);
+  }
+} 
