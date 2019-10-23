@@ -2,20 +2,44 @@ import 'package:flutter/material.dart';
 import 'services.dart';
 import 'first.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'services.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Rao Infotech'),
+    return FutureBuilder<String>(
+      future: auth(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: MyHomePage(title: 'Rao Infotech'),
+          );
+        } else {
+          print("in main ====>"+snapshot.data);
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: SecondScreen(value: snapshot.data),
+          );
+        }
+      },
     );
+    // return MaterialApp(
+    //   title: 'Flutter Demo',
+    //   theme: ThemeData(
+    //     primarySwatch: Colors.blue,
+    //   ),
+    //   home: MyHomePage(title: 'Rao Infotech'),
+    // );
   }
 }
 
@@ -29,12 +53,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
   _login(String uname, String password) async {
     print("in login");
     var response = await login(uname, password);
+    final prefs = await SharedPreferences.getInstance();
     if (response != null) {
       var userId = response.id;
+      prefs.setString('id', userId);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SecondScreen(value: userId)),
@@ -80,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     hintText: 'UserName',
                     border: OutlineInputBorder(
                         borderRadius:
-                          BorderRadius.all(Radius.circular(radius)))),
+                            BorderRadius.all(Radius.circular(radius)))),
               ),
               Padding(padding: EdgeInsets.all(5)),
               TextField(
@@ -98,8 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     _login(userNameController.text, passwordController.text);
                   },
-                  child: Text("LOGIN")
-                  )
+                  child: Text("LOGIN"))
             ],
           ),
         ),

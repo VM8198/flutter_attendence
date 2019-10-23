@@ -38,23 +38,46 @@ class _SecondScreenState extends State<SecondScreen> {
                   flex: 0,
                   child: Column(
                     children: <Widget>[
-                      Table(
+                      Container(
+                        width: 340,
+                        child: Table(
                         border: TableBorder.all(color: Colors.black),
                         children: <TableRow>[
                           TableRow(children: <Widget>[
-                            Text("Date", textAlign: TextAlign.center),
-                            Text("Day", textAlign: TextAlign.center),
-                            Text("Hours in Office",
-                                textAlign: TextAlign.center),
-                            Text("Action", textAlign: TextAlign.center)
+                            Container(
+                              height: 40,
+                              child: Center(
+                                child: Text("Date", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+                                )
+                              ),
+                            Container(
+                              height: 40,
+                              child: Center(
+                                child: Text("Day", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+                                )
+                              ),
+                            Container(
+                              height: 40,
+                              child: Center(
+                                child: Text("Hours", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+                                )
+                              ),
+                            Container(
+                              height: 40,
+                              child: Center(
+                                child: Text("Action", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+                                )
+                              )
                           ])
                         ],
-                      )
+                      ))
                     ],
                   ),
                 ),
                 Expanded(
-                  child: FutureBuilder<MultipleDaysLogs>(
+                  child: Container(
+                    width: 340,
+                    child: FutureBuilder<MultipleDaysLogs>(
                     future: _getMultipleDaysLogs(widget.value),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData)
@@ -73,19 +96,28 @@ class _SecondScreenState extends State<SecondScreen> {
                               children: <TableRow>[
                                 TableRow(
                                   children: <Widget>[
-                                    Text(data.multipleDaysLogs[position].date,
-                                        textAlign: TextAlign.center),
+                                    Container(
+                                      height: 30,                                       
+                                      child: Center(child:  
+                                      Text(data.multipleDaysLogs[position].date.toString().split("T")[0],
+                                          textAlign: TextAlign.center)
+                                    )),
+                                    Container(height: 30,child:Center(child:  
                                     Text(data.multipleDaysLogs[position].day,
                                         textAlign: TextAlign.center),
+                                    )),
+                                    Container(height: 30, child: Center(child:  
                                     Text(data.multipleDaysLogs[position].difference,
                                         textAlign: TextAlign.center),
+                                    )),
+                                    Container(height: 30,child: Center(child:  
                                     GestureDetector(
                                       onTap: () {
                                         openDialog(data.multipleDaysLogs[position].timeLog);
                                       },
                                       child: Text("View",
                                           textAlign: TextAlign.center),
-                                    )
+                                    )))
                                   ],
                                 ),
                               ],
@@ -96,7 +128,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       }
                     },
                   ),
-                )
+                ))
               ],
             ),
           ),
@@ -160,7 +192,7 @@ class _SecondScreenState extends State<SecondScreen> {
       context: context,
       barrierColor: Colors.white.withOpacity(1), // background color
       barrierDismissible:
-          false, // should dialog be dismissed when tapped outside
+          true, // should dialog be dismissed when tapped outside
       barrierLabel: "Dialog", // label for barrier
       transitionDuration: Duration(
           milliseconds:
@@ -179,14 +211,24 @@ class _SecondScreenState extends State<SecondScreen> {
                       border: TableBorder.all(color: Colors.black),
                       children: <TableRow>[
                         TableRow(children: <Widget>[
-                          Text("In",
+                          Container(
+                            height: 30,
+                            child: Center(
+                              child: Text("In",
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(fontSize: 30, color: Colors.black)),
-                          Text("Out",
+                            ),
+                          ),
+                          Container(
+                            height: 30,
+                            child: Center(
+                              child: Text("Out",
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(fontSize: 30, color: Colors.black)),
+                            ),
+                          )
                         ])
                       ],
                     )
@@ -196,18 +238,30 @@ class _SecondScreenState extends State<SecondScreen> {
               Expanded(
                   child: ListView.builder(
                           itemBuilder: (context, position) {
-                            return SizedBox(width: 300,child:
+                            return SizedBox(
+                              width: 300,child:
                              Table(
                               border: TableBorder.all(color: Colors.black),
                               children: <TableRow>[
                                 TableRow(
                                   children: <Widget>[
-                                    Text(timeLog[position].inTime,
+                                    Container(
+                                      height: 30,
+                                      child: Center(
+                                        child: Text(timeLog[position].inTime,
                                         textAlign: TextAlign.center,style:
-                                  TextStyle(fontSize: 20, color: Colors.black)),
-                                    Text(timeLog[position].outTime,
-                                        textAlign: TextAlign.center,style:
-                                  TextStyle(fontSize: 20, color: Colors.black)),                                    
+                                        TextStyle(fontSize: 20, color: Colors.black)) 
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 30,
+                                      child: Center(
+                                        child: Text(timeLog[position].outTime,
+                                                textAlign: TextAlign.center,style:
+                                                TextStyle(fontSize: 20, color: Colors.black)), 
+                                      ),
+                                    )
+                                                                        
                                   ],
                                 ),
                               ],
@@ -220,7 +274,9 @@ class _SecondScreenState extends State<SecondScreen> {
               
             ],
           ),
-        ));
+        )
+        
+        );
       },
     );
   }

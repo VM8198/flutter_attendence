@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'classes/user.dart';
 import 'classes/attendence.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // const baseUrl = 'https://attendence.raoinformationtechnology.com:4000/';
  const baseUrl = 'http://192.168.1.50:5000/';
@@ -37,6 +38,14 @@ Future<Attendence> fillAttendence(String userId) async {
   }else{
     return null;
   }
+}
+
+Future<String> auth() async{
+  final prefs = await SharedPreferences.getInstance();
+  final value = prefs.getString('id');
+  print("+++++++++++"+value);
+  if(value != null) return value;
+  else return null;
 }
 
 Future<Attendence> getAttendenceById(String userId) async {    
