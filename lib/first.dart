@@ -1,5 +1,6 @@
 import 'package:attendence/showLogs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'services.dart';
 import 'classes/attendence.dart';
 
@@ -20,20 +21,24 @@ class _SecondScreenState extends State<SecondScreen> {
         appBar: AppBar(
           title: Text('Attendence'),
         ),
+        
         body: Container(
           child: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[                  
                   RaisedButton(
                       color: Colors.blue,
+                      textColor: Colors.white,
                       onPressed: () {
-                        this.setState(() => isClicked = !isClicked);
                            _fillAttendence(widget.value);
                       },
                       child: isClicked ? Text("Fill Attendence") : Text("Remove"),
                   ),                  
-                
+                ]),
                 Expanded(
                   flex: 0,
                   child: Column(
@@ -87,8 +92,6 @@ class _SecondScreenState extends State<SecondScreen> {
                             width: 20);
                       if (snapshot.hasData) {
                         var data = snapshot.data;
-                        // data.add(snapshot.data.multipleDaysLogs);
-                        print("======================>1234"+snapshot.data.multipleDaysLogs[0].date.toString());
                         return ListView.builder(
                           itemBuilder: (context, position) {
                             return Table(
@@ -132,32 +135,48 @@ class _SecondScreenState extends State<SecondScreen> {
               ],
             ),
           ),
-        ));
+        ),
+        drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('Drawer Header'),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              title: Text('Item 1'),
+              onTap: () {
+               Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ShowLogs(value: widget.value)),
+                        ).then((context)=>{
+                              Navigator.pop(context)
+                        });
+              },
+            ),
+            ListTile(
+              title: Text('Item 2'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ))
+      );
   }
 
   Future<Attendence> _fillAttendence(String userId) async {
     var response = await fillAttendence(userId);
     print("FILL ATTENDENCE");
     if (response != null) {
+      setState(() {
+       isClicked = !isClicked; 
+      });
       return response;
     } else {
-      return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: new Text("Something went wrong"),
-          );
-        },
-      );
-    }
-  }
-
-  Future<Attendence> _getAttendenceById(String userId) async {
-    var response = await getAttendenceById(userId);
-    if (response != null) {
-      return response;
-    } else {
-      print("in else");
       return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -170,9 +189,9 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   Future<MultipleDaysLogs> _getMultipleDaysLogs(String userId) async{
+    print("==================================");
     var response = await getMultipleDaysLogs(userId);
-    if (response != null) {      
-       print("response"+response.toString());
+    if (response != null) {
       return response;
     } else {
       print("in else");
@@ -186,6 +205,13 @@ class _SecondScreenState extends State<SecondScreen> {
       );
     }
   } 
+
+  handleChangePage(uid){
+    Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ShowLogs(value: uid)),
+        );
+  }
 
   Widget openDialog(List<TimeLog> timeLog) {
     showGeneralDialog(
@@ -203,7 +229,7 @@ class _SecondScreenState extends State<SecondScreen> {
           child: Column(
             children: <Widget>[
               Expanded(
-                flex: 0,
+               flex: 0,
                 child: Column(
                   children: <Widget>[                    
                     Padding(padding: EdgeInsets.all(24)),
@@ -236,11 +262,10 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
               ),
               Expanded(
+                flex: 1,
                   child: ListView.builder(
-                          itemBuilder: (context, position) {
-                            return SizedBox(
-                              width: 300,child:
-                             Table(
+                        itemBuilder: (context, position) {
+                            return Table(
                               border: TableBorder.all(color: Colors.black),
                               children: <TableRow>[
                                 TableRow(
@@ -260,24 +285,21 @@ class _SecondScreenState extends State<SecondScreen> {
                                                 textAlign: TextAlign.center,style:
                                                 TextStyle(fontSize: 20, color: Colors.black)), 
                                       ),
-                                    )
-                                                                        
+                                    )                                                                        
                                   ],
                                 ),
                               ],
-                            ));
+                            );
                           },
                           itemCount: timeLog.length,
                         ) 
-              
-                ),
-              
-            ],
-          ),
-        )
-        
+                  ),
+                ],
+              ),
+            )
+            
+            );
+          },
         );
-      },
-    );
-  }
+      }
 }

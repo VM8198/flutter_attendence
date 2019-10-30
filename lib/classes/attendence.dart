@@ -7,7 +7,7 @@ class Attendence {
   final String status;
   final String difference;
   final String absentCount;
-  final String userId;
+  final String uid;
   final String date;
   final String day;
   final List<TimeLog> timeLog;
@@ -18,7 +18,7 @@ class Attendence {
     this.status,
     this.difference,
     this.absentCount,
-    this.userId,
+    this.uid,
     this.date,
     this.day,
     this.timeLog
@@ -34,7 +34,7 @@ class Attendence {
       difference: json['diffrence'] as String,
       day: json['day'] as String,
       absentCount: json['absentCount'] as String,
-      userId: json['userId'] as String,
+      //uid: json['userId'] as String,
       date: json['date'] as String,
       timeLog: finalLogs
     );

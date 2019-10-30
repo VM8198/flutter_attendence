@@ -3,7 +3,6 @@ import 'services.dart';
 import 'first.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'services.dart';
 
 void main() => runApp(MyApp());
 
@@ -33,13 +32,7 @@ class MyApp extends StatelessWidget {
         }
       },
     );
-    // return MaterialApp(
-    //   title: 'Flutter Demo',
-    //   theme: ThemeData(
-    //     primarySwatch: Colors.blue,
-    //   ),
-    //   home: MyHomePage(title: 'Rao Infotech'),
-    // );
+    
   }
 }
 
