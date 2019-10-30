@@ -37,6 +37,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+
+  
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -71,15 +73,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final userNameController = TextEditingController();
     final passwordController = TextEditingController();
     double radius = 5;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+     
       body: Center(
         child: Container(
           width: 200,
@@ -122,5 +124,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+   
   }
 }

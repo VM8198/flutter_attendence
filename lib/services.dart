@@ -29,7 +29,16 @@ Future login(String uname, String password) async {
   }
 }
 
-Future<Attendence> fillAttendence(String userId) async {
+Future<String> logout() async{
+  print("in logout service");
+  final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    return "log out successfully";
+}
+
+Future<Attendence> fillAttendence() async {
+  final prefs = await SharedPreferences.getInstance();
+  final userId = prefs.getString('id');
   var body = {'userId': userId};
   print("body==============>  "+body.toString());
   var response = await http.post(baseUrl + "attendance/fill-attendance", body: body);
@@ -44,6 +53,7 @@ Future<Attendence> fillAttendence(String userId) async {
 }
 
 Future<String> auth() async{
+  print("+++++++++++++++++++++++++in auth function");
   final prefs = await SharedPreferences.getInstance();
   final value = prefs.getString('id');
   print("+++++++++++"+value);
@@ -51,7 +61,9 @@ Future<String> auth() async{
   else return null;
 }
 
-Future<Attendence> getAttendenceById(String userId) async {    
+Future<Attendence> getAttendenceById() async {
+  final prefs = await SharedPreferences.getInstance();
+  final userId = prefs.getString('id');    
   var body = {'userId': userId};  
   var response = await http.post(baseUrl + "attendance/get-attendance-by-id", body: body);
   if(response.statusCode == 200){
@@ -61,7 +73,9 @@ Future<Attendence> getAttendenceById(String userId) async {
   }else return null;
 }
 
-Future<MultipleDaysLogs> getMultipleDaysLogs(String userId) async{
+Future<MultipleDaysLogs> getMultipleDaysLogs() async{
+  final prefs = await SharedPreferences.getInstance();
+  final userId = prefs.getString('id');
   var body = {'userId': userId, 'days': '5'};  
   print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
   var response = await http.post(baseUrl + "attendance/get-attendance-by-id", body: body);
@@ -72,8 +86,10 @@ Future<MultipleDaysLogs> getMultipleDaysLogs(String userId) async{
   }else return null;
 }
 
-Future<MultipleDaysLogs> getDateWiseLogs(String userId,DateTime d1,DateTime d2) async {
+Future<MultipleDaysLogs> getDateWiseLogs(DateTime d1,DateTime d2) async {
   print("last days service");
+  final prefs = await SharedPreferences.getInstance();
+  final userId = prefs.getString('id');
   var body = {'userId ': userId, 'startDate': d1, 'endDate': d2, 'flag': 'true'};
   print(body);
   print("Hello World !!");
@@ -92,8 +108,10 @@ Future<MultipleDaysLogs> getDateWiseLogs(String userId,DateTime d1,DateTime d2) 
   }
 }
 
-Future<MultipleDaysLogs> getDateWiseLogsString(String userId,String d1,String d2) async {
+Future<MultipleDaysLogs> getDateWiseLogsString(String d1,String d2) async {
   print("last days service");
+  final prefs = await SharedPreferences.getInstance();
+  final userId = prefs.getString('id');
   var body = {'userId': userId, 'startDate': d1, 'endDate': d2, 'flag': 'true'};
   print(body);
   var response = await http.post(baseUrl + "attendance/get-report-by-id", body: body);

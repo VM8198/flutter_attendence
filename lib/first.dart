@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'services.dart';
 import 'classes/attendence.dart';
+import 'drawer.dart';
+import 'style/loader.dart';
+
 
 class SecondScreen extends StatefulWidget {
   final String value;
@@ -21,7 +24,7 @@ class _SecondScreenState extends State<SecondScreen> {
         appBar: AppBar(
           title: Text('Attendence'),
         ),
-        
+        drawer: MyDrawer(),
         body: Container(
           child: Center(
             child: Column(
@@ -34,7 +37,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       color: Colors.blue,
                       textColor: Colors.white,
                       onPressed: () {
-                           _fillAttendence(widget.value);
+                           _fillAttendence();
                       },
                       child: isClicked ? Text("Fill Attendence") : Text("Remove"),
                   ),                  
@@ -83,11 +86,11 @@ class _SecondScreenState extends State<SecondScreen> {
                   child: Container(
                     width: 340,
                     child: FutureBuilder<MultipleDaysLogs>(
-                    future: _getMultipleDaysLogs(widget.value),
+                    future: _getMultipleDaysLogs(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData)
                         return SizedBox(
-                            child: Center(child: CircularProgressIndicator()),
+                            child: Center(child: ColorLoader3()),
                             height: 20,
                             width: 20);
                       if (snapshot.hasData) {
@@ -136,40 +139,11 @@ class _SecondScreenState extends State<SecondScreen> {
             ),
           ),
         ),
-        drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text('Drawer Header'),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-            ),
-            ListTile(
-              title: Text('Item 1'),
-              onTap: () {
-               Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ShowLogs(value: widget.value)),
-                        ).then((context)=>{
-                              Navigator.pop(context)
-                        });
-              },
-            ),
-            ListTile(
-              title: Text('Item 2'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ))
       );
   }
 
-  Future<Attendence> _fillAttendence(String userId) async {
-    var response = await fillAttendence(userId);
+  Future<Attendence> _fillAttendence() async {
+    var response = await fillAttendence();
     print("FILL ATTENDENCE");
     if (response != null) {
       setState(() {
@@ -188,9 +162,9 @@ class _SecondScreenState extends State<SecondScreen> {
     }
   }
 
-  Future<MultipleDaysLogs> _getMultipleDaysLogs(String userId) async{
+  Future<MultipleDaysLogs> _getMultipleDaysLogs() async{
     print("==================================");
-    var response = await getMultipleDaysLogs(userId);
+    var response = await getMultipleDaysLogs();
     if (response != null) {
       return response;
     } else {

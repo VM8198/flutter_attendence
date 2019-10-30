@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'classes/attendence.dart';
 import 'services.dart';
+import 'drawer.dart';
+import 'style/loader.dart';
 
 class ShowLogs extends StatefulWidget {
-  final String value;
-  ShowLogs({Key key, this.value}) : super(key: key);
+  final Future<String> value;
+  ShowLogs({Key key, this.value,}) : super(key: key);
   @override
   _ShowLogsState createState() => _ShowLogsState();
 }
@@ -17,6 +19,7 @@ class _ShowLogsState extends State<ShowLogs> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Show logs")),
+        drawer: MyDrawer(),
         body: Container(
           child: Center(
             child: Column(
@@ -97,11 +100,11 @@ class _ShowLogsState extends State<ShowLogs> {
                     child: Container(
                   width: 340,
                   child: FutureBuilder<MultipleDaysLogs>(
-                    future: flag ? _getLogsString(selectedDate1.toString().split(" ")[0], selectedDate2.toString().split(" ")[0]) : _getMultipleDaysLogs(widget.value),
+                    future: flag ? _getLogsString(selectedDate1.toString().split(" ")[0], selectedDate2.toString().split(" ")[0]) : _getMultipleDaysLogs(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData)
                         return SizedBox(
-                            child: Center(child: CircularProgressIndicator()),
+                            child: Center(child: ColorLoader3()),
                             height: 20,
                             width: 20);
                       if (snapshot.hasData) {
@@ -279,8 +282,8 @@ class _ShowLogsState extends State<ShowLogs> {
     });
   }
 
-  Future<MultipleDaysLogs> _getMultipleDaysLogs(String userId) async {
-    var response = await getMultipleDaysLogs(userId);
+  Future<MultipleDaysLogs> _getMultipleDaysLogs() async {
+    var response = await getMultipleDaysLogs();
     if (response != null) {
       return response;
     } else {
@@ -298,7 +301,7 @@ class _ShowLogsState extends State<ShowLogs> {
 
   Future<MultipleDaysLogs> _getLogsString(String date1, String date2) async {
     print("selected dates" + date1.toString() + date2.toString());
-    var response = await getDateWiseLogsString(widget.value, date1, date2);
+    var response = await getDateWiseLogsString(date1, date2);
     if (response != null) {
       print("response" + response.toString());
       return response;
