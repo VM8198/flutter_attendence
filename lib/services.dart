@@ -46,6 +46,7 @@ Future<Attendence> fillAttendence() async {
     var jsonResponse = json.decode(response.body);
     print("++++++++++++"+response.body.toString());
     var attendence = Attendence.fromJson(jsonResponse[0]);
+    prefs.setString('status', attendence.status);
     return attendence;
   }else{
     return null;
@@ -82,6 +83,7 @@ Future<MultipleDaysLogs> getMultipleDaysLogs() async{
   if(response.statusCode == 200){
     var jsonResponse = json.decode(response.body);
     var multipleDaysLogs = MultipleDaysLogs.fromJson(jsonResponse);
+    print(multipleDaysLogs);
     return multipleDaysLogs; 
   }else return null;
 }
@@ -96,11 +98,9 @@ Future<MultipleDaysLogs> getDateWiseLogs(DateTime d1,DateTime d2) async {
   var response = await http.post(baseUrl + "attendance/get-report-by-id", body: body);
   print("-----------------------------------------------------------");
   if(response.statusCode == 200){
-    print("aaivo aaivo");
+    print("_________________"+response.body);
     var jsonResponse = json.decode(response.body);
     var logs = MultipleDaysLogs.fromJson(jsonResponse);
-    print("hal hve");
-    print(logs);
     return logs;
   }else{
     print("in else");
@@ -116,7 +116,7 @@ Future<MultipleDaysLogs> getDateWiseLogsString(String d1,String d2) async {
   print(body);
   var response = await http.post(baseUrl + "attendance/get-report-by-id", body: body);
   if(response.statusCode == 200){
-    // print("aaivo aaivo");
+   print(response.body);
     var jsonResponse = json.decode(response.body);
     var logs = MultipleDaysLogs.fromJson(jsonResponse);
     print("hal hve");
@@ -143,123 +143,4 @@ Future<MultipleDaysLogs> getDateWiseLogsString(String d1,String d2) async {
 
 
 
-      // Center(
-        // child: Container(
-        //   padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-        //   child: Center(
-        //   child: Column(
-        //   children: <Widget>[
-        //     FlatButton(
-        //         color: Colors.blue,
-        //         onPressed: () {
-        //           _fillAttendence(widget.value);
-        //         },
-        //         child: Text("Fill Attenedence")
-        //         ),
-        //         // Column()
-        //         Table(                
-        //           border: TableBorder.all(color: Colors.black),
-        //           children: <TableRow>[
-        //             TableRow(
-        //               children: <Widget>[
-        //                 FittedBox(
-        //                   child: Center(
-        //                     child: Text("Date",
-        //                       textAlign: TextAlign.center,
-        //                       style: TextStyle(
-        //                       color: Colors.black,
-        //                       fontSize: 1,
-        //                       )
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 FittedBox(
-        //                   child: Center(
-        //                     child: Text("Day",
-        //                       textAlign: TextAlign.center,
-        //                       style: TextStyle(
-        //                       color: Colors.black,
-        //                       fontSize: 1,
-        //                       )
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 FittedBox(
-        //                   child: Center(
-        //                     child: Text("Hours \n in \n office",
-        //                       textAlign: TextAlign.center,
-        //                       style: TextStyle(
-        //                       color: Colors.black,
-        //                       fontSize: 1,
-        //                       )
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 FittedBox(
-        //                   child: Center(
-        //                     child: Text("Action",
-        //                       textAlign: TextAlign.center,
-        //                       style: TextStyle(
-        //                       color: Colors.black,
-        //                       fontSize: 1,
-        //                       )
-        //                     ),
-        //                   ),
-        //                 ),
-        //               ]
-        //             ),
-        //             TableRow(
-        //               children: <Widget>[
-        //                 FittedBox(
-        //                   child: Center(
-        //                     child: Text("17-10-2019",
-        //                       textAlign: TextAlign.center,
-        //                       style: TextStyle(
-        //                       color: Colors.black,
-        //                       fontSize: 1,
-        //                       )
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 FittedBox(
-        //                   child: Center(
-        //                     child: Text("Thursday",
-        //                       textAlign: TextAlign.center,
-        //                       style: TextStyle(
-        //                       color: Colors.black,
-        //                       fontSize: 1,
-        //                       )
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 FittedBox(
-        //                   child: Center(
-        //                     child: Text("5:00",
-        //                       textAlign: TextAlign.center,
-        //                       style: TextStyle(
-        //                       color: Colors.black,
-        //                       fontSize: 1,
-        //                       )
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 FittedBox(
-        //                   child: Center(
-        //                     child: Text("View",
-        //                       textAlign: TextAlign.center,
-        //                       style: TextStyle(
-        //                       color: Colors.black,
-        //                       fontSize: 1,
-        //                       )
-        //                     ),
-        //                   ),
-        //                 ),
-        //               ] 
-        //             )
-        //           ],
-        //         )
-        //       ],
-        //     ),
-        //   ),
-        // ),
-      //),
+     

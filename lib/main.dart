@@ -48,6 +48,60 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  
+  @override
+  Widget build(BuildContext context) {
+    final userNameController = TextEditingController();
+    final passwordController = TextEditingController();
+    double radius = 5;
+    return Scaffold(    
+      body: Center(
+        child: Container(
+          width: 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Login',
+                style: TextStyle(color: Colors.blue, fontSize: 30),
+              ),
+              Padding(padding: EdgeInsets.all(5)),
+              TextField(
+                controller: userNameController,
+                decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.person_outline),
+                    hintText: 'UserName',
+                    border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.all(Radius.circular(radius)))),
+              ),
+              Padding(padding: EdgeInsets.all(5)),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.lock_open),
+                    hintText: 'Password',
+                    border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.all(Radius.circular(radius)))),
+              ),              
+              FlatButton(
+                  color: Colors.blue,
+                  onPressed: () {
+                    _login(userNameController.text, passwordController.text);
+                  },
+                  child: Text("LOGIN"))
+            ],
+          ),
+        ),
+        
+      ),
+      
+    );
+   
+  }
+
   _login(String uname, String password) async {
     print("in login");
     var response = await login(uname, password);
@@ -66,64 +120,12 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            title: new Text("Something went wrong"),
+            title: new Text("Wrong email or password"),
           );
         },
       );
     }
   }
 
-
-
-  @override
-  Widget build(BuildContext context) {
-    final userNameController = TextEditingController();
-    final passwordController = TextEditingController();
-    double radius = 5;
-    return Scaffold(
-     
-      body: Center(
-        child: Container(
-          width: 200,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Login',
-                style: TextStyle(color: Colors.blue, fontSize: 30),
-              ),
-              Padding(padding: EdgeInsets.all(5)),
-              TextField(
-                controller: userNameController,
-                decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.perm_identity),
-                    hintText: 'UserName',
-                    border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(radius)))),
-              ),
-              Padding(padding: EdgeInsets.all(5)),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.security),
-                    hintText: 'Password',
-                    border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(radius)))),
-              ),
-              FlatButton(
-                  color: Colors.blue,
-                  onPressed: () {
-                    _login(userNameController.text, passwordController.text);
-                  },
-                  child: Text("LOGIN"))
-            ],
-          ),
-        ),
-      ),
-    );
-   
-  }
+ 
 }

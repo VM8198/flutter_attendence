@@ -6,7 +6,10 @@ import 'style/loader.dart';
 
 class ShowLogs extends StatefulWidget {
   final Future<String> value;
-  ShowLogs({Key key, this.value,}) : super(key: key);
+  ShowLogs({
+    Key key,
+    this.value,
+  }) : super(key: key);
   @override
   _ShowLogsState createState() => _ShowLogsState();
 }
@@ -26,26 +29,51 @@ class _ShowLogsState extends State<ShowLogs> {
               children: <Widget>[
                 Expanded(
                     flex: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
                       children: <Widget>[
-                        RaisedButton(
-                          color: Colors.blue,
-                          textColor: Colors.white,
-                          onPressed: () {
-                            _selectDate1(context);
-                          },
-                          child: Text("Select date 1"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RaisedButton(
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              onPressed: () {
+                                _selectDate1(context);
+                              },
+                              child: Text("Select date 1"),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                            ),
+                            RaisedButton(
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              onPressed: () {
+                                _selectDate2(context);
+                              },
+                              child: Text("Select date 2"),
+                            ),
+                          ],
                         ),
-                        Padding(padding: EdgeInsets.symmetric(horizontal: 10),),
-                        RaisedButton(
-                          color: Colors.blue,
-                          textColor: Colors.white,
-                          onPressed: () {
-                            _selectDate2(context);
-                          },
-                          child: Text("Select date 2"),
-                        ),
+                        Container(
+                          child:  FutureBuilder(
+                      future: getRemainingHours(),
+                      builder: (context, snapshot){
+                        if(!snapshot.hasData){
+                          return Container(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              children: <Widget>[                                
+                                    Text("Total hours to work : 8:00:00", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                    Padding(padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),),
+                                    Text("Total hours worked : 5:00:00", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+                                ],
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                        )
                       ],
                     )),
                 Expanded(
@@ -100,7 +128,10 @@ class _ShowLogsState extends State<ShowLogs> {
                     child: Container(
                   width: 340,
                   child: FutureBuilder<MultipleDaysLogs>(
-                    future: flag ? _getLogsString(selectedDate1.toString().split(" ")[0], selectedDate2.toString().split(" ")[0]) : _getMultipleDaysLogs(),
+                    future: flag
+                        ? _getLogsString(selectedDate1.toString().split(" ")[0],
+                            selectedDate2.toString().split(" ")[0])
+                        : _getMultipleDaysLogs(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData)
                         return SizedBox(
@@ -182,16 +213,21 @@ class _ShowLogsState extends State<ShowLogs> {
               400), // how long it takes to popup dialog after button click
       pageBuilder: (_, __, ___) {
         return Material(
-            child: SizedBox.expand(
+            child: SizedBox(
+          height: 100,
+          width: 100,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Row(
+                children: <Widget>[],
+              ),
               Expanded(
                 flex: 0,
                 child: Column(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.all(24)),
+                    Padding(padding: EdgeInsets.all(50)),
                     Table(
-                      border: TableBorder.all(color: Colors.black),
                       children: <TableRow>[
                         TableRow(children: <Widget>[
                           Container(
@@ -219,39 +255,36 @@ class _ShowLogsState extends State<ShowLogs> {
                 ),
               ),
               Expanded(
-                  flex: 1,
                   child: ListView.builder(
-                    itemBuilder: (context, position) {
-                      return Table(
-                        border: TableBorder.all(color: Colors.black),
-                        children: <TableRow>[
-                          TableRow(
-                            children: <Widget>[
-                              Container(
-                                height: 30,
-                                child: Center(
-                                    child: Text(timeLog[position].inTime,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black))),
-                              ),
-                              Container(
-                                height: 30,
-                                child: Center(
-                                  child: Text(timeLog[position].outTime,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 20, color: Colors.black)),
-                                ),
-                              )
-                            ],
+                itemBuilder: (context, position) {
+                  return Table(
+                    children: <TableRow>[
+                      TableRow(
+                        children: <Widget>[
+                          Container(
+                            height: 30,
+                            child: Center(
+                                child: Text(timeLog[position].inTime,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black))),
                           ),
+                          Container(
+                            height: 30,
+                            child: Center(
+                              child: Text(timeLog[position].outTime,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black)),
+                            ),
+                          )
                         ],
-                      );
-                    },
-                    itemCount: timeLog.length,
-                  )),
+                      ),
+                    ],
+                  );
+                },
+                itemCount: timeLog.length,
+              )),
             ],
           ),
         ));
@@ -278,7 +311,7 @@ class _ShowLogsState extends State<ShowLogs> {
     // _getLogsString(selectedDate1.toString().split(" ")[0],
     //     selectedDate2.toString().split(" ")[0]);
     setState(() {
-     flag = true; 
+      flag = true;
     });
   }
 
@@ -300,7 +333,6 @@ class _ShowLogsState extends State<ShowLogs> {
   }
 
   Future<MultipleDaysLogs> _getLogsString(String date1, String date2) async {
-    print("selected dates" + date1.toString() + date2.toString());
     var response = await getDateWiseLogsString(date1, date2);
     if (response != null) {
       print("response" + response.toString());
@@ -316,5 +348,9 @@ class _ShowLogsState extends State<ShowLogs> {
         },
       );
     }
+  }
+
+  Future getRemainingHours() async{
+    return null;
   }
 }

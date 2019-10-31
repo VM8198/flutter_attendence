@@ -5,7 +5,7 @@ import 'services.dart';
 import 'classes/attendence.dart';
 import 'drawer.dart';
 import 'style/loader.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SecondScreen extends StatefulWidget {
   final String value;
@@ -17,6 +17,28 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   bool isClicked = true;
+
+  @override
+  @mustCallSuper
+  void initState(){
+    super.initState();
+    getStatus();
+  }
+
+  getStatus() async{
+    final prefs = await SharedPreferences.getInstance();
+    print("in init state============>");
+    final value = prefs.getString('status');
+    if(value == "Present"){
+      setState(() {
+       isClicked = false; 
+      });
+    }else if(value == "Absent"){
+      setState(() {
+       isClicked = true; 
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +117,7 @@ class _SecondScreenState extends State<SecondScreen> {
                             width: 20);
                       if (snapshot.hasData) {
                         var data = snapshot.data;
+                        // print("000000000000000000"+data.multipleDaysLogs.toString());
                         return ListView.builder(
                           itemBuilder: (context, position) {
                             return Table(
@@ -145,10 +168,11 @@ class _SecondScreenState extends State<SecondScreen> {
   Future<Attendence> _fillAttendence() async {
     var response = await fillAttendence();
     print("FILL ATTENDENCE");
+    print(response);
     if (response != null) {
-      setState(() {
-       isClicked = !isClicked; 
-      });
+        setState(() {
+          isClicked = !isClicked; 
+        });
       return response;
     } else {
       return showDialog(
@@ -158,7 +182,7 @@ class _SecondScreenState extends State<SecondScreen> {
             title: new Text("Something went wrong"),
           );
         },
-      );
+      ); 
     }
   }
 
@@ -199,25 +223,29 @@ class _SecondScreenState extends State<SecondScreen> {
               400), // how long it takes to popup dialog after button click
       pageBuilder: (_, __, ___) {
         return Material(
-         child: SizedBox.expand(
-          child: Column(
+         child: SizedBox(
+           height: 100,width: 100,
+          child: 
+          Column(     
+            mainAxisAlignment: MainAxisAlignment.center,       
             children: <Widget>[
-              Expanded(
-               flex: 0,
+              Row(children: <Widget>[
+                
+              ],),
+              Expanded(flex: 0,               
                 child: Column(
                   children: <Widget>[                    
-                    Padding(padding: EdgeInsets.all(24)),
+                    Padding(padding: EdgeInsets.all(50)),
                     Table(
-                      border: TableBorder.all(color: Colors.black),
                       children: <TableRow>[
                         TableRow(children: <Widget>[
-                          Container(
+                           Container(
                             height: 30,
                             child: Center(
                               child: Text("In",
                               textAlign: TextAlign.center,
                               style:
-                                  TextStyle(fontSize: 30, color: Colors.black)),
+                                  TextStyle(fontSize: 30,fontWeight: FontWeight.bold, color: Colors.black)),
                             ),
                           ),
                           Container(
@@ -226,7 +254,7 @@ class _SecondScreenState extends State<SecondScreen> {
                               child: Text("Out",
                               textAlign: TextAlign.center,
                               style:
-                                  TextStyle(fontSize: 30, color: Colors.black)),
+                                  TextStyle(fontSize: 30,fontWeight: FontWeight.bold, color: Colors.black)),
                             ),
                           )
                         ])
@@ -236,11 +264,9 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
               ),
               Expanded(
-                flex: 1,
                   child: ListView.builder(
                         itemBuilder: (context, position) {
                             return Table(
-                              border: TableBorder.all(color: Colors.black),
                               children: <TableRow>[
                                 TableRow(
                                   children: <Widget>[
@@ -252,7 +278,7 @@ class _SecondScreenState extends State<SecondScreen> {
                                         TextStyle(fontSize: 20, color: Colors.black)) 
                                       ),
                                     ),
-                                    Container(
+                                  Container(
                                       height: 30,
                                       child: Center(
                                         child: Text(timeLog[position].outTime,
