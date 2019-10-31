@@ -62,30 +62,14 @@ class MultipleDaysLogs {
 
   MultipleDaysLogs({this.multipleDaysLogs, this.totalHoursCompleted, this.totalHoursToComplete});
 
-  factory MultipleDaysLogs.fromJson(List<dynamic> multiJson){
-    List<Attendence> attendence = new List<Attendence>();
-    attendence = multiJson.map((i)=>Attendence.fromJson(i)).toList();
-    return MultipleDaysLogs(multipleDaysLogs: attendence );
+   factory MultipleDaysLogs.fromJson(Map<String, dynamic> multiJson){
+    var attendence = multiJson['foundLogs'].map((i)=>Attendence.fromJson(i)).toList();
+      return MultipleDaysLogs(
+        multipleDaysLogs: attendence,
+        totalHoursCompleted: multiJson['TotalHoursCompleted'] as String,
+        totalHoursToComplete: multiJson['TotalHoursToComplete'] as String
+    );
   }
-  // factory MultipleDaysLogs.fromJson(Map<String, dynamic> multiJson){
-  //     return MultipleDaysLogs(
-  //       multipleDaysLogs: multiJson['foundLogs'],
-  //       totalHoursCompleted: multiJson['TotalHoursCompleted'] as String,
-  //       totalHoursToComplete: multiJson['TotalHoursToComplete'] as String
-  //   );
-  // }
 } 
 
-
-/*prisma
-  worked in website builder
-  where user can create website as per their need
-  by drag and drop 
-  created template-5
-  show users instagram feeds on website
-  apply google and facebook pixels on created website
-  calculate total cost of order and display
-  some bug fixes
-  technology: AngularJS, NodeJS, GrapesJS, MongoDB 
-*/
 

@@ -57,16 +57,18 @@ class _ShowLogsState extends State<ShowLogs> {
                         ),
                         Container(
                           child:  FutureBuilder(
-                      future: getRemainingHours(),
+                      future: _getLogsString(selectedDate1.toString().split(" ")[0],
+                            selectedDate2.toString().split(" ")[0]),
                       builder: (context, snapshot){
-                        if(!snapshot.hasData){
+                        if(snapshot.hasData){
                           return Container(
                             padding: EdgeInsets.all(10),
                             child: Column(
                               children: <Widget>[                                
-                                    Text("Total hours to work : 8:00:00", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                    Text("Total hours to work : "+snapshot.data.totalHoursToComplete, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                                     Padding(padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),),
-                                    Text("Total hours worked : 5:00:00", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+                                    Text("Total hours worked : "+snapshot.data
+                                    .totalHoursCompleted, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
                                 ],
                             ),
                           );

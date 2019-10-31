@@ -117,7 +117,7 @@ class _SecondScreenState extends State<SecondScreen> {
                             width: 20);
                       if (snapshot.hasData) {
                         var data = snapshot.data;
-                        // print("000000000000000000"+data.multipleDaysLogs.toString());
+                        print("000000000000000000"+data.multipleDaysLogs.toString());
                         return ListView.builder(
                           itemBuilder: (context, position) {
                             return Table(
