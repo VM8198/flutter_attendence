@@ -177,6 +177,7 @@ class _ShowLogsState extends State<ShowLogs> {
                             width: 20);
                       if (snapshot.hasData) {
                         var data = snapshot.data;
+                        List<dynamic> logs = data.multipleDaysLogs.reversed.toList();
                         return ListView.builder(
                           itemBuilder: (context, position) {
                             return Table(
@@ -188,7 +189,7 @@ class _ShowLogsState extends State<ShowLogs> {
                                         height: 30,
                                         child: Center(
                                             child: Text(
-                                                data.multipleDaysLogs[position]
+                                                logs[position]
                                                     .date
                                                     .toString()
                                                     .split("T")[0],
@@ -197,7 +198,7 @@ class _ShowLogsState extends State<ShowLogs> {
                                         height: 30,
                                         child: Center(
                                           child: Text(
-                                              data.multipleDaysLogs[position]
+                                              logs[position]
                                                   .day,
                                               textAlign: TextAlign.center),
                                         )),
@@ -205,7 +206,7 @@ class _ShowLogsState extends State<ShowLogs> {
                                         height: 30,
                                         child: Center(
                                           child: Text(
-                                              data.multipleDaysLogs[position]
+                                              logs[position]
                                                   .difference,
                                               textAlign: TextAlign.center),
                                         )),
@@ -214,8 +215,7 @@ class _ShowLogsState extends State<ShowLogs> {
                                         child: Center(
                                             child: GestureDetector(
                                           onTap: () {
-                                            openDialog(data
-                                                .multipleDaysLogs[position]
+                                            openDialog(logs[position]
                                                 .timeLog);
                                           },
                                           child: Text("View",
@@ -226,7 +226,7 @@ class _ShowLogsState extends State<ShowLogs> {
                               ],
                             );
                           },
-                          itemCount: data.multipleDaysLogs.length,
+                          itemCount: logs.length,
                         );
                       }
                     },

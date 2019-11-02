@@ -127,7 +127,8 @@ class _SecondScreenState extends State<SecondScreen> {
                           height: 20,
                           width: 20);
                     if (snapshot.hasData) {
-                      var data = snapshot.data;                     
+                      var data = snapshot.data; 
+                      List<dynamic> logs = data.multipleDaysLogs.reversed.toList();
                       return ListView.builder( //List of last five days logs
                         itemBuilder: (context, position) {
                           return Table(
@@ -139,7 +140,7 @@ class _SecondScreenState extends State<SecondScreen> {
                                       height: 30,
                                       child: Center(
                                           child: Text(
-                                              data.multipleDaysLogs[position]
+                                              logs[position]
                                                   .date
                                                   .toString()
                                                   .split("T")[0],
@@ -148,14 +149,14 @@ class _SecondScreenState extends State<SecondScreen> {
                                       height: 30,
                                       child: Center(
                                         child: Text(
-                                            data.multipleDaysLogs[position].day,
+                                            logs[position].day,
                                             textAlign: TextAlign.center),
                                       )),
                                   Container(
                                       height: 30,
                                       child: Center(
                                         child: Text(
-                                            data.multipleDaysLogs[position]
+                                            logs[position]
                                                 .difference,
                                             textAlign: TextAlign.center),
                                       )),
@@ -164,8 +165,7 @@ class _SecondScreenState extends State<SecondScreen> {
                                       child: Center(
                                           child: GestureDetector( //tap on view to show detailed logs
                                         onTap: () {
-                                          openDialog(data
-                                              .multipleDaysLogs[position]
+                                          openDialog(logs[position]
                                               .timeLog);
                                         },
                                         child: Text("View",
@@ -176,7 +176,7 @@ class _SecondScreenState extends State<SecondScreen> {
                             ],
                           );
                         },
-                        itemCount: data.multipleDaysLogs.length, //show list till all data is not displayed
+                        itemCount: logs.length, //show list till all data is not displayed
                       );
                     }
                   },
@@ -318,4 +318,4 @@ class _SecondScreenState extends State<SecondScreen> {
       },
     );
   }
-}
+} 
