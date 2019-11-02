@@ -10,10 +10,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: auth(),
+      future: auth(), //check if user logged in or not
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return MaterialApp(
+          return MaterialApp( //if user is loggin first time then show login screen 
             title: 'Flutter Demo',
             theme: ThemeData(
               primarySwatch: Colors.blue,
@@ -21,8 +21,7 @@ class MyApp extends StatelessWidget {
             home: MyHomePage(title: 'Rao Infotech'),
           );
         } else {
-          print("in main ====>"+snapshot.data);
-          return MaterialApp(
+          return MaterialApp( //if user already logged in redirect to second screen
             title: 'Flutter Demo',
             theme: ThemeData(
               primarySwatch: Colors.blue,
@@ -55,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final passwordController = TextEditingController();
     double radius = 5;
     return Scaffold(    
+      //log in screen
       backgroundColor: Colors.yellow[50],
       body: Center(
         child: Container(
@@ -100,11 +100,8 @@ class _MyHomePageState extends State<MyHomePage> {
               )],
           ),
         ),
-        
       ),
-      
-    );
-   
+    );  
   }
 
   _login(String uname, String password) async {
@@ -113,10 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
     final prefs = await SharedPreferences.getInstance();
     if (response != null) {
       var userId = response.id;
-      prefs.setString('id', userId);
+      prefs.setString('id', userId); //store user id in localStorage
       var getStatus = await getAttendenceById();
-      prefs.setString('status', getStatus.status);
-      print("Login ma ================> "+getStatus.status);
+      prefs.setString('status', getStatus.status); //store status of user in localStorage
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SecondScreen(value: userId)),
@@ -133,7 +129,5 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       );
     }
-  }
-
- 
+  } 
 }

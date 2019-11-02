@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:attendence/services.dart';
 import 'package:flutter/material.dart';
 import 'showLogs.dart';
@@ -15,7 +13,7 @@ class _MyDrawerState extends State<MyDrawer> {
  @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: ListView(
+      child: ListView(
       padding: EdgeInsets.zero,
       children: <Widget>[
         DrawerHeader(
@@ -69,17 +67,13 @@ class _MyDrawerState extends State<MyDrawer> {
             FutureBuilder<String>(
                 future: _logout(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  print(
-                      "===============>>>>>>>>>>>>" + snapshot.data.toString());
                   if (snapshot.hasData) {
-                    print("*******************************" + snapshot.data);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MyApp()),
                     );
                   }
                   if (!snapshot.hasData) {
-                    print("&&&&&&&&&&&&&&&&&&&&&");
                   }
                 });
           },

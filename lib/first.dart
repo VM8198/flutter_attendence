@@ -22,7 +22,7 @@ class _SecondScreenState extends State<SecondScreen> {
   @mustCallSuper
   void initState(){
     super.initState();
-    getStatus();
+    getStatus(); //get status to check attendence filled or not
   }
 
   getStatus() async{
@@ -47,7 +47,7 @@ class _SecondScreenState extends State<SecondScreen> {
       appBar: AppBar(
         title: Text('Attendence'),
       ),
-      drawer: MyDrawer(),
+      drawer: MyDrawer(), //call drawer
       body: Container(
         child: Center(
           child: Column(
@@ -63,15 +63,16 @@ class _SecondScreenState extends State<SecondScreen> {
                         _fillAttendence();
                       },
                       child:
-                          isClicked ? Text("Fill Attendence") : Text("Remove"),
+                          isClicked ? Text("Start") : Text("Stop"),
                     ),
                   ]),
+                  //Table header
               Expanded(
                 flex: 0,
                 child: Column(
                   children: <Widget>[
                     Container(
-                        width: 340,
+                        width: MediaQuery.of(context).size.width - 20,
                         child: Table(
                           border: TableBorder.all(color: Colors.black),
                           children: <TableRow>[
@@ -116,18 +117,18 @@ class _SecondScreenState extends State<SecondScreen> {
               ),
               Expanded(
                   child: Container(
-                width: 340,
+                width: MediaQuery.of(context).size.width - 20,
                 child: FutureBuilder<MultipleDaysLogs>(
-                  future: _getMultipleDaysLogs(),
+                  future: _getMultipleDaysLogs(),  //get last five days logs 
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData)
+                    if (!snapshot.hasData) //if data is null then show loader
                       return SizedBox(
                           child: Center(child: ColorLoader3()),
                           height: 20,
                           width: 20);
                     if (snapshot.hasData) {
                       var data = snapshot.data;                     
-                      return ListView.builder(
+                      return ListView.builder( //List of last five days logs
                         itemBuilder: (context, position) {
                           return Table(
                             border: TableBorder.all(color: Colors.black),
@@ -161,7 +162,7 @@ class _SecondScreenState extends State<SecondScreen> {
                                   Container(
                                       height: 30,
                                       child: Center(
-                                          child: GestureDetector(
+                                          child: GestureDetector( //tap on view to show detailed logs
                                         onTap: () {
                                           openDialog(data
                                               .multipleDaysLogs[position]
@@ -175,7 +176,7 @@ class _SecondScreenState extends State<SecondScreen> {
                             ],
                           );
                         },
-                        itemCount: data.multipleDaysLogs.length,
+                        itemCount: data.multipleDaysLogs.length, //show list till all data is not displayed
                       );
                     }
                   },
@@ -192,7 +193,7 @@ class _SecondScreenState extends State<SecondScreen> {
     var response = await fillAttendence();
     if (response != null) {
       setState(() {
-        isClicked = !isClicked;
+        isClicked = !isClicked; //to change button if clicked or not
       });
       return response;
     } else {
@@ -223,13 +224,7 @@ class _SecondScreenState extends State<SecondScreen> {
     }
   }
 
-  handleChangePage(uid) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ShowLogs(value: uid)),
-    );
-  }
-
+  //show detaild logs
   Widget openDialog(List<TimeLog> timeLog) {
     showGeneralDialog(
       context: context,
@@ -244,18 +239,16 @@ class _SecondScreenState extends State<SecondScreen> {
         return Material(
             child: SizedBox(
           height: 100,
-          width: 100,
+          width: MediaQuery.of(context).size.width - 20,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Row(
-                children: <Widget>[],
-              ),
+              //table header
               Expanded(
                 flex: 0,
                 child: Column(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.all(50)),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50)),
                     Table(
                       children: <TableRow>[
                         TableRow(children: <Widget>[
@@ -287,6 +280,7 @@ class _SecondScreenState extends State<SecondScreen> {
                   ],
                 ),
               ),
+              //table data
               Expanded(
                   child: ListView.builder(
                 itemBuilder: (context, position) {
@@ -316,7 +310,7 @@ class _SecondScreenState extends State<SecondScreen> {
                     ],
                   );
                 },
-                itemCount: timeLog.length,
+                itemCount: timeLog.length, //show list till all data is not displayed
               )),
             ],
           ),

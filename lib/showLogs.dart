@@ -15,11 +15,12 @@ class ShowLogs extends StatefulWidget {
 }
 
 class _ShowLogsState extends State<ShowLogs> {
-  DateTime selectedDate1 = DateTime.now();
+  DateTime selectedDate1 = DateTime.now(); //assign todays date to both dates
   DateTime selectedDate2 = DateTime.now();
   String worked = '';
   String toWork = '';
   bool flag = false;
+  bool isDate1Selected = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,21 +48,23 @@ class _ShowLogsState extends State<ShowLogs> {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
                             ),
-                            RaisedButton(
+                            IgnorePointer( //if date 1 is not selected then it is disabled
+                              ignoring: isDate1Selected ? false : true,
+                              child: RaisedButton(
                               color: Colors.blue,
                               textColor: Colors.white,
                               onPressed: () {
                                 _selectDate2(context);
                               },
                               child: Text("Select date 2"),
-                            ),
+                            ),)
                           ],
                         ),
                         Container(
                           child: FutureBuilder(
                             future: _getLogsString(
                                 selectedDate1.toString().split(" ")[0],
-                                selectedDate2.toString().split(" ")[0]),
+                                selectedDate2.toString().split(" ")[0] ),
                             builder: (context, snapshot) {
                               if(!snapshot.hasData){
                                 return Container(
@@ -115,7 +118,7 @@ class _ShowLogsState extends State<ShowLogs> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                          width: 340,
+                          width: MediaQuery.of(context).size.width - 20,
                           child: Table(
                             border: TableBorder.all(color: Colors.black),
                             children: <TableRow>[
@@ -160,7 +163,7 @@ class _ShowLogsState extends State<ShowLogs> {
                 ),
                 Expanded(
                     child: Container(
-                  width: 340,
+                  width: MediaQuery.of(context).size.width - 20,
                   child: FutureBuilder<MultipleDaysLogs>(
                     future: flag
                         ? _getLogsString(selectedDate1.toString().split(" ")[0],
@@ -249,7 +252,7 @@ class _ShowLogsState extends State<ShowLogs> {
         return Material(
             child: SizedBox(
           height: 100,
-          width: 100,
+          width: MediaQuery.of(context).size.width - 20,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -260,7 +263,7 @@ class _ShowLogsState extends State<ShowLogs> {
                 flex: 0,
                 child: Column(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.all(50)),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50)),
                     Table(
                       children: <TableRow>[
                         TableRow(children: <Widget>[
@@ -332,19 +335,24 @@ class _ShowLogsState extends State<ShowLogs> {
         initialDate: selectedDate1,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate1) selectedDate1 = picked;
+    if (picked != null && picked != selectedDate1) {selectedDate1 = picked; setState(() {
+     isDate1Selected = true; 
+    });}
   }
 
   Future<Null> _selectDate2(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate2,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate2) selectedDate2 = picked;
-     setState(() {
-      flag = true;
-    });
+    if(selectedDate1 != null){
+      final DateTime picked = await showDatePicker(
+          context: context,
+          initialDate: selectedDate2,
+          firstDate: DateTime(2015, 8),
+          lastDate: DateTime(2101));
+      if (picked != null && picked != selectedDate2) selectedDate2 = picked;
+      setState(() {
+        flag = true;
+        isDate1Selected = false;
+      });
+    }
   }
 
   Future<MultipleDaysLogs> _getMultipleDaysLogs() async {
