@@ -17,6 +17,8 @@ class ShowLogs extends StatefulWidget {
 class _ShowLogsState extends State<ShowLogs> {
   DateTime selectedDate1 = DateTime.now();
   DateTime selectedDate2 = DateTime.now();
+  String worked = '';
+  String toWork = '';
   bool flag = false;
   @override
   Widget build(BuildContext context) {
@@ -56,25 +58,55 @@ class _ShowLogsState extends State<ShowLogs> {
                           ],
                         ),
                         Container(
-                          child:  FutureBuilder(
-                      future: _getLogsString(selectedDate1.toString().split(" ")[0],
-                            selectedDate2.toString().split(" ")[0]),
-                      builder: (context, snapshot){
-                        if(snapshot.hasData){
-                          return Container(
-                            padding: EdgeInsets.all(10),
-                            child: Column(
-                              children: <Widget>[                                
-                                    Text("Total hours to work : "+snapshot.data.totalHoursToComplete, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                                    Padding(padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),),
-                                    Text("Total hours worked : "+snapshot.data
-                                    .totalHoursCompleted, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
-                                ],
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                          child: FutureBuilder(
+                            future: _getLogsString(
+                                selectedDate1.toString().split(" ")[0],
+                                selectedDate2.toString().split(" ")[0]),
+                            builder: (context, snapshot) {
+                              if(!snapshot.hasData){
+                                return Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text("Total hours to work : ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20)),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                      ),
+                                      Text("Total hours worked : ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20))
+                                    ],
+                                  ),
+                                );
+                              }
+                              if (snapshot.hasData) {
+                                return Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text("Total hours to work : " + toWork,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20)),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                      ),
+                                      Text("Total hours worked : " + worked,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20))
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         )
                       ],
                     )),
@@ -310,9 +342,7 @@ class _ShowLogsState extends State<ShowLogs> {
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate2) selectedDate2 = picked;
-    // _getLogsString(selectedDate1.toString().split(" ")[0],
-    //     selectedDate2.toString().split(" ")[0]);
-    setState(() {
+     setState(() {
       flag = true;
     });
   }
@@ -320,6 +350,8 @@ class _ShowLogsState extends State<ShowLogs> {
   Future<MultipleDaysLogs> _getMultipleDaysLogs() async {
     var response = await getMultipleDaysLogs();
     if (response != null) {
+      worked = response.totalHoursCompleted;
+      toWork = response.totalHoursToComplete;
       return response;
     } else {
       print("in else");
@@ -337,7 +369,8 @@ class _ShowLogsState extends State<ShowLogs> {
   Future<MultipleDaysLogs> _getLogsString(String date1, String date2) async {
     var response = await getDateWiseLogsString(date1, date2);
     if (response != null) {
-      print("response" + response.toString());
+      worked = response.totalHoursCompleted;
+      toWork = response.totalHoursToComplete;
       return response;
     } else {
       print("in else");
@@ -350,9 +383,5 @@ class _ShowLogsState extends State<ShowLogs> {
         },
       );
     }
-  }
-
-  Future getRemainingHours() async{
-    return null;
   }
 }

@@ -55,15 +55,16 @@ class _MyHomePageState extends State<MyHomePage> {
     final passwordController = TextEditingController();
     double radius = 5;
     return Scaffold(    
+      backgroundColor: Colors.yellow[50],
       body: Center(
         child: Container(
-          width: 200,
+          width: 300,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 'Login',
-                style: TextStyle(color: Colors.blue, fontSize: 30),
+                style: TextStyle(color: Colors.blue, fontSize: 30, fontWeight: FontWeight.bold),
               ),
               Padding(padding: EdgeInsets.all(5)),
               TextField(
@@ -85,14 +86,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.all(Radius.circular(radius)))),
-              ),              
-              FlatButton(
+              ),  
+              Padding(padding: EdgeInsets.symmetric(vertical: 8),), 
+              SizedBox(
+                width: 200,
+                height: 50,
+                child: FlatButton(
                   color: Colors.blue,
                   onPressed: () {
                     _login(userNameController.text, passwordController.text);
-                  },
-                  child: Text("LOGIN"))
-            ],
+                  },                  
+                  child: Text("LOGIN", style: TextStyle(color: Colors.white,fontSize: 20),))
+              )],
           ),
         ),
         
@@ -109,6 +114,9 @@ class _MyHomePageState extends State<MyHomePage> {
     if (response != null) {
       var userId = response.id;
       prefs.setString('id', userId);
+      var getStatus = await getAttendenceById();
+      prefs.setString('status', getStatus.status);
+      print("Login ma ================> "+getStatus.status);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SecondScreen(value: userId)),

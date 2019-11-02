@@ -29,13 +29,14 @@ class _SecondScreenState extends State<SecondScreen> {
     final prefs = await SharedPreferences.getInstance();
     print("in init state============>");
     final value = prefs.getString('status');
+    print("000000"+value);
     if(value == "Present"){
       setState(() {
-       isClicked = false; 
+       isClicked = false;
       });
     }else if(value == "Absent"){
       setState(() {
-       isClicked = true; 
+       isClicked = true;
       });
     }
   }
@@ -43,156 +44,158 @@ class _SecondScreenState extends State<SecondScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Attendence'),
-        ),
-        drawer: MyDrawer(),
-        body: Container(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
+      appBar: AppBar(
+        title: Text('Attendence'),
+      ),
+      drawer: MyDrawer(),
+      body: Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[                  
-                  RaisedButton(
+                  children: <Widget>[
+                    RaisedButton(
                       color: Colors.blue,
                       textColor: Colors.white,
                       onPressed: () {
-                           _fillAttendence();
+                        _fillAttendence();
                       },
-                      child: isClicked ? Text("Fill Attendence") : Text("Remove"),
-                  ),                  
-                ]),
-                Expanded(
-                  flex: 0,
-                  child: Column(
-                    children: <Widget>[
-                      Container(
+                      child:
+                          isClicked ? Text("Fill Attendence") : Text("Remove"),
+                    ),
+                  ]),
+              Expanded(
+                flex: 0,
+                child: Column(
+                  children: <Widget>[
+                    Container(
                         width: 340,
                         child: Table(
-                        border: TableBorder.all(color: Colors.black),
-                        children: <TableRow>[
-                          TableRow(children: <Widget>[
-                            Container(
-                              height: 40,
-                              child: Center(
-                                child: Text("Date", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
-                                )
-                              ),
-                            Container(
-                              height: 40,
-                              child: Center(
-                                child: Text("Day", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
-                                )
-                              ),
-                            Container(
-                              height: 40,
-                              child: Center(
-                                child: Text("Hours", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
-                                )
-                              ),
-                            Container(
-                              height: 40,
-                              child: Center(
-                                child: Text("Action", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
-                                )
-                              )
-                          ])
-                        ],
-                      ))
-                    ],
-                  ),
+                          border: TableBorder.all(color: Colors.black),
+                          children: <TableRow>[
+                            TableRow(children: <Widget>[
+                              Container(
+                                  height: 40,
+                                  child: Center(
+                                      child: Text("Date",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20)))),
+                              Container(
+                                  height: 40,
+                                  child: Center(
+                                      child: Text("Day",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20)))),
+                              Container(
+                                  height: 40,
+                                  child: Center(
+                                      child: Text("Hours",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20)))),
+                              Container(
+                                  height: 40,
+                                  child: Center(
+                                      child: Text("Action",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20))))
+                            ])
+                          ],
+                        ))
+                  ],
                 ),
-                Expanded(
+              ),
+              Expanded(
                   child: Container(
-                    width: 340,
-                    child: FutureBuilder<MultipleDaysLogs>(
-                    future: _getMultipleDaysLogs(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (!snapshot.hasData)
-                        return SizedBox(
-                            child: Center(child: ColorLoader3()),
-                            height: 20,
-                            width: 20);
-                      if (snapshot.hasData) {
-                        var data = snapshot.data;
-                        print("000000000000000000"+data.multipleDaysLogs.toString());
-                        return ListView.builder(
-                          itemBuilder: (context, position) {
-                            return Table(
-                              border: TableBorder.all(color: Colors.black),
-                              children: <TableRow>[
-                                TableRow(
-                                  children: <Widget>[
-                                    Container(
-                                      height: 30,                                       
-                                      child: Center(child:  
-                                      Text(data.multipleDaysLogs[position].date.toString().split("T")[0],
-                                          textAlign: TextAlign.center)
-                                    )),
-                                    Container(height: 30,child:Center(child:  
-                                    Text(data.multipleDaysLogs[position].day,
-                                        textAlign: TextAlign.center),
-                                    )),
-                                    Container(height: 30, child: Center(child:  
-                                    Text(data.multipleDaysLogs[position].difference,
-                                        textAlign: TextAlign.center),
-                                    )),
-                                    Container(height: 30,child: Center(child:  
-                                    GestureDetector(
-                                      onTap: () {
-                                        openDialog(data.multipleDaysLogs[position].timeLog);
-                                      },
-                                      child: Text("View",
-                                          textAlign: TextAlign.center),
-                                    )))
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                          itemCount: data.multipleDaysLogs.length,
-                        );
-                      }
-                    },
-                  ),
-                ))
-              ],
-            ),
+                width: 340,
+                child: FutureBuilder<MultipleDaysLogs>(
+                  future: _getMultipleDaysLogs(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (!snapshot.hasData)
+                      return SizedBox(
+                          child: Center(child: ColorLoader3()),
+                          height: 20,
+                          width: 20);
+                    if (snapshot.hasData) {
+                      var data = snapshot.data;                     
+                      return ListView.builder(
+                        itemBuilder: (context, position) {
+                          return Table(
+                            border: TableBorder.all(color: Colors.black),
+                            children: <TableRow>[
+                              TableRow(
+                                children: <Widget>[
+                                  Container(
+                                      height: 30,
+                                      child: Center(
+                                          child: Text(
+                                              data.multipleDaysLogs[position]
+                                                  .date
+                                                  .toString()
+                                                  .split("T")[0],
+                                              textAlign: TextAlign.center))),
+                                  Container(
+                                      height: 30,
+                                      child: Center(
+                                        child: Text(
+                                            data.multipleDaysLogs[position].day,
+                                            textAlign: TextAlign.center),
+                                      )),
+                                  Container(
+                                      height: 30,
+                                      child: Center(
+                                        child: Text(
+                                            data.multipleDaysLogs[position]
+                                                .difference,
+                                            textAlign: TextAlign.center),
+                                      )),
+                                  Container(
+                                      height: 30,
+                                      child: Center(
+                                          child: GestureDetector(
+                                        onTap: () {
+                                          openDialog(data
+                                              .multipleDaysLogs[position]
+                                              .timeLog);
+                                        },
+                                        child: Text("View",
+                                            textAlign: TextAlign.center),
+                                      )))
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                        itemCount: data.multipleDaysLogs.length,
+                      );
+                    }
+                  },
+                ),
+              ))
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
   Future<Attendence> _fillAttendence() async {
     var response = await fillAttendence();
-    print("FILL ATTENDENCE");
-    print(response);
     if (response != null) {
-        setState(() {
-          isClicked = !isClicked; 
-        });
+      setState(() {
+        isClicked = !isClicked;
+      });
       return response;
     } else {
-      return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: new Text("Something went wrong"),
-          );
-        },
-      ); 
-    }
-  }
-
-  Future<MultipleDaysLogs> _getMultipleDaysLogs() async{
-    print("==================================");
-    var response = await getMultipleDaysLogs();
-    if (response != null) {
-      return response;
-    } else {
-      print("in else");
       return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -202,13 +205,29 @@ class _SecondScreenState extends State<SecondScreen> {
         },
       );
     }
-  } 
+  }
 
-  handleChangePage(uid){
+  Future<MultipleDaysLogs> _getMultipleDaysLogs() async {
+    var response = await getMultipleDaysLogs();
+    if (response != null) {
+      return response;
+    } else {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Something went wrong"),
+          );
+        },
+      );
+    }
+  }
+
+  handleChangePage(uid) {
     Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ShowLogs(value: uid)),
-        );
+      context,
+      MaterialPageRoute(builder: (context) => ShowLogs(value: uid)),
+    );
   }
 
   Widget openDialog(List<TimeLog> timeLog) {
@@ -223,38 +242,43 @@ class _SecondScreenState extends State<SecondScreen> {
               400), // how long it takes to popup dialog after button click
       pageBuilder: (_, __, ___) {
         return Material(
-         child: SizedBox(
-           height: 100,width: 100,
-          child: 
-          Column(     
-            mainAxisAlignment: MainAxisAlignment.center,       
+            child: SizedBox(
+          height: 100,
+          width: 100,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Row(children: <Widget>[
-                
-              ],),
-              Expanded(flex: 0,               
+              Row(
+                children: <Widget>[],
+              ),
+              Expanded(
+                flex: 0,
                 child: Column(
-                  children: <Widget>[                    
+                  children: <Widget>[
                     Padding(padding: EdgeInsets.all(50)),
                     Table(
                       children: <TableRow>[
                         TableRow(children: <Widget>[
-                           Container(
+                          Container(
                             height: 30,
                             child: Center(
                               child: Text("In",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 30,fontWeight: FontWeight.bold, color: Colors.black)),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black)),
                             ),
                           ),
                           Container(
                             height: 30,
                             child: Center(
                               child: Text("Out",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 30,fontWeight: FontWeight.bold, color: Colors.black)),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black)),
                             ),
                           )
                         ])
@@ -265,41 +289,39 @@ class _SecondScreenState extends State<SecondScreen> {
               ),
               Expanded(
                   child: ListView.builder(
-                        itemBuilder: (context, position) {
-                            return Table(
-                              children: <TableRow>[
-                                TableRow(
-                                  children: <Widget>[
-                                    Container(
-                                      height: 30,
-                                      child: Center(
-                                        child: Text(timeLog[position].inTime,
-                                        textAlign: TextAlign.center,style:
-                                        TextStyle(fontSize: 20, color: Colors.black)) 
-                                      ),
-                                    ),
-                                  Container(
-                                      height: 30,
-                                      child: Center(
-                                        child: Text(timeLog[position].outTime,
-                                                textAlign: TextAlign.center,style:
-                                                TextStyle(fontSize: 20, color: Colors.black)), 
-                                      ),
-                                    )                                                                        
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                          itemCount: timeLog.length,
-                        ) 
-                  ),
-                ],
-              ),
-            )
-            
-            );
-          },
-        );
-      }
+                itemBuilder: (context, position) {
+                  return Table(
+                    children: <TableRow>[
+                      TableRow(
+                        children: <Widget>[
+                          Container(
+                            height: 30,
+                            child: Center(
+                                child: Text(timeLog[position].inTime,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black))),
+                          ),
+                          Container(
+                            height: 30,
+                            child: Center(
+                              child: Text(timeLog[position].outTime,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black)),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  );
+                },
+                itemCount: timeLog.length,
+              )),
+            ],
+          ),
+        ));
+      },
+    );
+  }
 }
