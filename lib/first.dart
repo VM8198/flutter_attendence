@@ -27,9 +27,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
   getStatus() async{
     final prefs = await SharedPreferences.getInstance();
-    print("in init state============>");
     final value = prefs.getString('status');
-    print("000000"+value);
     if(value == "Present"){
       setState(() {
        isClicked = false;
@@ -238,8 +236,8 @@ class _SecondScreenState extends State<SecondScreen> {
       pageBuilder: (_, __, ___) {
         return Material(
             child: SizedBox(
-          height: 100,
-          width: MediaQuery.of(context).size.width - 20,
+          // height: 100,
+          // width: MediaQuery.of(context).size.width/50,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
