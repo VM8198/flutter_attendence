@@ -45,7 +45,7 @@ class _SecondScreenState extends State<SecondScreen> {
       appBar: AppBar(
         title: Text('Attendence'),
       ),
-      drawer: MyDrawer(), //call drawer
+      drawer: MyDrawer(), //open drawer
       body: Container(
         child: Center(
           child: Column(
@@ -114,7 +114,7 @@ class _SecondScreenState extends State<SecondScreen> {
                 ),
               ),
               Expanded(
-                  child: Container(
+                child: Container(
                 width: MediaQuery.of(context).size.width - 20,
                 child: FutureBuilder<MultipleDaysLogs>(
                   future: _getMultipleDaysLogs(),  //get last five days logs 
@@ -223,7 +223,7 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   //show detaild logs
-  Widget openDialog(List<TimeLog> timeLog) {
+ Widget openDialog(List<TimeLog> timeLog) {
     showGeneralDialog(
       context: context,
       barrierColor: Colors.white.withOpacity(1), // background color
@@ -234,14 +234,16 @@ class _SecondScreenState extends State<SecondScreen> {
           milliseconds:
               400), // how long it takes to popup dialog after button click
       pageBuilder: (_, __, ___) {
-        return Material(
-            child: SizedBox(
-          // height: 100,
-          // width: MediaQuery.of(context).size.width/50,
+        return Scaffold(appBar:  AppBar(title: Text("Time Logs")),
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width - 20,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              //table header
+              Row(
+                children: <Widget>[],
+              ),
               Expanded(
                 flex: 0,
                 child: Column(
@@ -251,25 +253,23 @@ class _SecondScreenState extends State<SecondScreen> {
                       children: <TableRow>[
                         TableRow(children: <Widget>[
                           Container(
+                            margin: EdgeInsets.only(bottom: 10),
                             height: 30,
                             child: Center(
                               child: Text("In",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black)),
+                                      fontSize: 30, color: Colors.black)),
                             ),
                           ),
                           Container(
+                            margin: EdgeInsets.only(bottom: 10),
                             height: 30,
                             child: Center(
                               child: Text("Out",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black)),
+                                      fontSize: 30, color: Colors.black)),
                             ),
                           )
                         ])
@@ -278,7 +278,6 @@ class _SecondScreenState extends State<SecondScreen> {
                   ],
                 ),
               ),
-              //table data
               Expanded(
                   child: ListView.builder(
                 itemBuilder: (context, position) {
@@ -308,7 +307,7 @@ class _SecondScreenState extends State<SecondScreen> {
                     ],
                   );
                 },
-                itemCount: timeLog.length, //show list till all data is not displayed
+                itemCount: timeLog.length,
               )),
             ],
           ),
@@ -316,4 +315,5 @@ class _SecondScreenState extends State<SecondScreen> {
       },
     );
   }
+
 } 

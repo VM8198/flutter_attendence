@@ -24,7 +24,7 @@ class _ShowLogsState extends State<ShowLogs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Show logs")),
+        appBar: AppBar(title: Text("Logs Summary")),
         drawer: MyDrawer(),
         body: Container(
           child: Center(
@@ -42,7 +42,7 @@ class _ShowLogsState extends State<ShowLogs> {
                               textColor: Colors.white,
                               onPressed: () {
                                 _selectDate1(context);
-                              },
+                              }, 
                               child: Text("Select date 1"),
                             ),
                             Padding(
@@ -249,9 +249,9 @@ class _ShowLogsState extends State<ShowLogs> {
           milliseconds:
               400), // how long it takes to popup dialog after button click
       pageBuilder: (_, __, ___) {
-        return Material(
-            child: SizedBox(
-          height: 100,
+        return Scaffold(appBar:  AppBar(title: Text("Time Logs")),
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width - 20,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -268,6 +268,7 @@ class _ShowLogsState extends State<ShowLogs> {
                       children: <TableRow>[
                         TableRow(children: <Widget>[
                           Container(
+                            margin: EdgeInsets.only(bottom: 10),
                             height: 30,
                             child: Center(
                               child: Text("In",
@@ -277,6 +278,7 @@ class _ShowLogsState extends State<ShowLogs> {
                             ),
                           ),
                           Container(
+                            margin: EdgeInsets.only(bottom: 10),
                             height: 30,
                             child: Center(
                               child: Text("Out",
