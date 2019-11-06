@@ -84,7 +84,7 @@ Future<MultipleDaysLogs> getMultipleDaysLogs() async{
 Future<MultipleDaysLogs> getDateWiseLogs(DateTime d1,DateTime d2) async {
   final prefs = await SharedPreferences.getInstance();
   final userId = prefs.getString('id');
-  var body = {'userId ': userId, 'startDate': d1, 'endDate': d2, 'flag': 'true'};
+  var body = {'userId': userId, 'startDate': d1, 'endDate': d2, 'flag': 'true'};
   var response = await http.post(baseUrl + "attendance/get-report-by-id", body: body);
   if(response.statusCode == 200){
     var jsonResponse = json.decode(response.body);

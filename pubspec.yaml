@@ -38,6 +38,10 @@ font_awesome_flutter: ^8.0.1
 
 # The following section is specific to Flutter.
 flutter:
+   fonts:
+    - family: Nunito
+      fonts:
+        - asset: fonts/Nunito-Bold.ttf
    uses-material-design: true
    assets:
     - assets/images/
