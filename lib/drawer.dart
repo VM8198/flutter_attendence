@@ -1,10 +1,13 @@
 import 'package:attendence/services.dart';
+import 'package:attendence/style/loader.dart';
 import 'package:flutter/material.dart';
 import 'showLogs.dart';
 import 'first.dart';
 import 'main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyDrawer extends StatefulWidget {
+  MyDrawer({Key key}) : super(key: key);
   @override
   _MyDrawerState createState() => _MyDrawerState();
 }
@@ -16,14 +19,57 @@ class _MyDrawerState extends State<MyDrawer> {
       child: ListView(
       padding: EdgeInsets.zero,
       children: <Widget>[
-        DrawerHeader(
-          child: Text(""),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/rao.png'),
-              fit: BoxFit.none,
-            ),
-          ),
+        Container(
+          child: FutureBuilder<List>(
+            future: getUserNameAndEmail(),
+            builder: (context, snapshot){
+              if(!snapshot.hasData){
+                return ColorLoader3();
+              }
+              if(snapshot.hasData){
+                return UserAccountsDrawerHeader(
+                    accountName: Padding(
+                      padding: const EdgeInsets.only(top: 20, left: 5),
+                      child: Text(snapshot.data[0], style: TextStyle(fontSize: 20),),
+                    ),
+                    accountEmail: Padding(
+                      padding: const EdgeInsets.only(left: 5, bottom: 0.0),
+                      child: Text(snapshot.data[1], style: TextStyle(fontSize: 15),),
+                    ),
+                    currentAccountPicture: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          'https://ui-avatars.com/api/?name='+snapshot.data[0]+'&color=0000ff&bold=true'),
+                    ),
+                );
+                // return DrawerHeader(
+                //   decoration: BoxDecoration(
+                //     color: Colors.blue,
+                //     image: DecorationImage(
+                //       image: AssetImage("assets/images/user.png"),
+                //       fit: BoxFit.fill
+                //     )
+                //   ),
+                //   child: Container(
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: <Widget>[
+                //       Row(
+                //         children: <Widget>[
+                //           Text(snapshot.data[0])
+                //         ],
+                //       ),
+                //       Row(
+                //         children: <Widget>[
+                //           Text(snapshot.data[1])
+                //         ],
+                //       )
+                //     ],
+                //   ),
+                // )
+                // );
+              }
+            },
+          ) 
         ),
         ListTile(
           leading: Icon(Icons.dashboard, size: 30, color: Colors.black),
@@ -91,5 +137,15 @@ class _MyDrawerState extends State<MyDrawer> {
     );  
     return data;
   } 
+
+  Future<List> getUserNameAndEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    var uName = prefs.getString('name');
+    var email = prefs.getString('email');
+    List<String> userData = new List<String>();
+    userData.add(uName);
+    userData.add(email);
+    return userData;
+  }
 }
 

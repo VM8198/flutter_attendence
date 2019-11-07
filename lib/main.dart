@@ -42,15 +42,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final userNameController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final userNameController = TextEditingController();
-    final passwordController = TextEditingController();
     double radius = 5;
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         //log in screen
-        // backgroundColor: Colors.yellow[50],
         bottomSheet: Container(
           height: MediaQuery.of(context).size.height / 10,
           width: MediaQuery.of(context).size.width,
@@ -72,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Stack(
           children: <Widget>[
             Container(
-              height: 250.0,
+              height: MediaQuery.of(context).size.height / 2,
               decoration: BoxDecoration(
                 color: Colors.blueAccent,
                 boxShadow: [BoxShadow(blurRadius: 20.0)],
@@ -87,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Container(
                   alignment: Alignment.topCenter,
                   padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * .15,
+                      top: MediaQuery.of(context).size.height * .19,
                       right: 20.0,
                       left: 20.0),
                   child: Container(
@@ -153,30 +152,35 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 )),
-                Container(
-                  
-                  child: Padding(
-                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/1.5),//top: MediaQuery.of(context).size.height * 2),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
+            Container(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height /
+                        1.4), //top: MediaQuery.of(context).size.height * 2),
+                child: Column(
+                  children: <Widget>[
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text("If you forget username/password then", style: TextStyle(fontSize: 17),)
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text("please contact admin", style: TextStyle(fontSize: 17))
-                          ],
+                      children: <Widget>[
+                        Text(
+                          "If you forget username/password then",
+                          style: TextStyle(fontSize: 17),
                         )
                       ],
                     ),
-                  ),
-                )
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text("please contact admin",
+                            style: TextStyle(fontSize: 17))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            )
           ],
         )));
   }
@@ -187,7 +191,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final prefs = await SharedPreferences.getInstance();
     if (response != null) {
       var userId = response.id;
-      prefs.setString('id', userId); //store user id in localStorage
+      var uName = response.name != null ? response.name : response.email;
+      var email = response.email;
+      prefs.setString('id', userId);
+      prefs.setString('name', uName);
+      prefs.setString('email', email); //store user id in localStorage
       var getStatus = await getAttendenceById();
       prefs.setString(
           'status', getStatus.status); //store status of user in localStorage

@@ -111,8 +111,7 @@ class _ShowLogsState extends State<ShowLogs> {
                                   ),
                                 );
                               }
-                              if (snapshot.hasData) {
-                                 
+                              if (snapshot.hasData) {                                 
                                 return Container(
                                   padding: EdgeInsets.all(10),
                                   child: Column(
@@ -235,8 +234,23 @@ class _ShowLogsState extends State<ShowLogs> {
             appBar: AppBar(title: Text("Time Logs")),
             body: SizedBox(
               height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width - 20,
-              child: Column(
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    // Add one stop for each color. Stops should increase from 0 to 1
+                    stops: [0.1, 0.5, 0.7, 0.9],
+                      colors: [
+                        Colors.indigo[300],
+                        Colors.indigo[200],
+                        Colors.indigo[100],
+                        Colors.indigo[50],
+                      ] 
+                  )
+                ),
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Row(
@@ -312,7 +326,7 @@ class _ShowLogsState extends State<ShowLogs> {
                   )),
                 ],
               ),
-            ));
+            )));
       },
     );
   }
