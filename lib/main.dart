@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'services.dart';
 import 'first.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_){
+      runApp(MyApp());
+    });
+  }
 
 class MyApp extends StatelessWidget {
   @override

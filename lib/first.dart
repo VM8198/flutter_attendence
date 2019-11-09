@@ -93,25 +93,33 @@ class _SecondScreenState extends State<SecondScreen> {
                           height: 20,
                           width: 20);
                     if (snapshot.hasData) {
+                      // if (MediaQuery.of(context).orientation == Orientation.landscape) {
+                      //   mode 
+                      // } else {
+                      //   count = 2;
+                      // }
                       var data = snapshot.data;
                       List<dynamic> logs = data.multipleDaysLogs.reversed.toList(); 
-                      var size = MediaQuery.of(context).size;   
-                          final double itemHeight = size.height/2.3;
+                      var size = MediaQuery.of(context).size;
+                          final double itemHeight = MediaQuery.of(context).orientation == Orientation.landscape ? size.height/2.3 : size.height/2.3 ;
+                          // final double itemHeight = size.height/2.3;
                           final double itemWidth = size.width;                  
                       return GridView.count(
-                        crossAxisCount: 2,
+                        crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2,
                         padding: EdgeInsets.all(8.0),
                         crossAxisSpacing: 8.0,
                         mainAxisSpacing: 5.0, 
-                        childAspectRatio: (itemWidth/itemHeight),                       
+                        childAspectRatio: MediaQuery.of(context).orientation == Orientation.landscape ? (1) : (itemWidth/itemHeight) ,                       
                         children: List.generate(logs.length,(index) {
                           return Container(
-                            child: GestureDetector(
-                            onTap: () { openDialog(logs[index].timeLog); },
                             child: Card(
                             color: Colors.lightGreen[100],
                             elevation: 10,
-                            child: Column(
+                            child: InkWell(
+                              onTap: (){
+                                openDialog(logs[index].timeLog);
+                              },
+                              child: Column(
                               children: <Widget>[
                                 Row(children: <Widget>[
                                   Padding(

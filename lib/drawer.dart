@@ -45,8 +45,8 @@ class _MyDrawerState extends State<MyDrawer> {
                 //   decoration: BoxDecoration(
                 //     color: Colors.blue,
                 //     image: DecorationImage(
-                //       image: AssetImage("assets/images/user.png"),
-                //       fit: BoxFit.fill
+                //       image: AssetImage("assets/images/profile.png"),
+                //       fit: BoxFit.fitWidth
                 //     )
                 //   ),
                 //   child: Container(
@@ -149,3 +149,4 @@ class _MyDrawerState extends State<MyDrawer> {
   }
 }
 
+ 

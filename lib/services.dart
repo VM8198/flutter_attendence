@@ -6,7 +6,7 @@ import 'classes/attendence.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // const baseUrl = 'https://attendence.raoinformationtechnology.com:4000/';
- const baseUrl = 'http://192.168.1.50:5000/';
+ const baseUrl = 'http://192.168.1.18:5000/';
 // const baseUrl = 'http://192.168.1.39:4000/';
 
 Future login(String uname, String password) async {
@@ -108,11 +108,6 @@ Future<MultipleDaysLogs> getDateWiseLogsString(String d1,String d2) async {
     return null;
   }
 }
-
-
-
-
-
 
 
 

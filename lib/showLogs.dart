@@ -20,6 +20,8 @@ class _ShowLogsState extends State<ShowLogs> {
   String worked = '';
   String toWork = '';
   bool flag = false;
+  String date1ToShow = DateTime.now().subtract(Duration(days: 5)).toString().split(" ")[0];
+  String date2ToShow = DateTime.now().toString().split(" ")[0];
   bool isDate1Selected = false;
   @override
   Widget build(BuildContext context) {
@@ -69,14 +71,14 @@ class _ShowLogsState extends State<ShowLogs> {
                               ),
                               IgnorePointer(
                                 //if date 1 is not selected then it is disabled
-                                ignoring: isDate1Selected ? false : true,
+                                ignoring: !isDate1Selected ,
                                 child: RaisedButton(
                                   color:Colors.lightGreen[100],
                                   textColor: Colors.blueAccent,
                                   onPressed: () {
                                     _selectDate2(context);
                                   },
-                                  child: Text("Select date 2", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.indigo[800])),
+                                  child: Text("select date 2", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.indigo[800])),
                                 ),
                               )
                             ],
@@ -93,6 +95,15 @@ class _ShowLogsState extends State<ShowLogs> {
                                   padding: EdgeInsets.all(10),
                                   child: Column(
                                     children: <Widget>[
+                                      Text("Logs From "+date1ToShow+" To "+date2ToShow,
+                                          style: TextStyle(
+                                              color: Colors.grey[50],
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15)),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                      ),
                                       Text("Total hours to work : ",
                                           style: TextStyle(
                                               color: Colors.grey[50],
@@ -116,6 +127,15 @@ class _ShowLogsState extends State<ShowLogs> {
                                   padding: EdgeInsets.all(10),
                                   child: Column(
                                     children: <Widget>[
+                                      Text("Logs From "+date1ToShow+" To "+date2ToShow,
+                                          style: TextStyle(
+                                              color: Colors.grey[50],
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15)),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                      ),
                                       Text("Total hours to work : " + toWork,
                                           style: TextStyle(
                                               color: Colors.grey[50],
@@ -158,19 +178,21 @@ class _ShowLogsState extends State<ShowLogs> {
                         List<dynamic> logs =
                             data.multipleDaysLogs.reversed.toList();
                         return GridView.count(
-                        crossAxisCount: 2,
+                        crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2,
                         padding: EdgeInsets.all(8.0),
                         crossAxisSpacing: 8.0,
                         mainAxisSpacing: 5.0, 
-                        childAspectRatio: (itemWidth/itemHeight),                       
+                        childAspectRatio: MediaQuery.of(context).orientation == Orientation.landscape ? (1) : (itemWidth/itemHeight) ,                        
                         children: List.generate(logs.length,(index) {
                           return Container(
-                            child: GestureDetector(
-                            onTap: () { openDialog(logs[index].timeLog); },
                             child: Card(
                             color: Colors.lightGreen[100],
                             elevation: 10,
-                            child: Column(
+                            child: InkWell(
+                              onTap: (){
+                                openDialog(logs[index].timeLog);
+                              },
+                              child:  Column(
                               children: <Widget>[
                                 Row(children: <Widget>[
                                   Padding(
@@ -337,9 +359,10 @@ class _ShowLogsState extends State<ShowLogs> {
         initialDate: selectedDate1,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate1) {
+    if (picked != null ){// && picked != selectedDate1) {
       selectedDate1 = picked;
       setState(() {
+        date1ToShow = picked.toString().split(" ")[0];
         isDate1Selected = true;
       });
     }
@@ -352,8 +375,11 @@ class _ShowLogsState extends State<ShowLogs> {
           initialDate: selectedDate2,
           firstDate: DateTime(2015, 8),
           lastDate: DateTime(2101));
-      if (picked != null && picked != selectedDate2) selectedDate2 = picked;
+      if (picked != null && picked != selectedDate2){ 
+        selectedDate2 = picked;
+      }
       setState(() {
+        date2ToShow = picked.toString().split(" ")[0];
         flag = true;
         isDate1Selected = false;
       });
