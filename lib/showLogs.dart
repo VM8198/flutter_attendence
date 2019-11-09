@@ -26,8 +26,8 @@ class _ShowLogsState extends State<ShowLogs> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size; 
-                                final double itemHeight = size.height/2.3;
-                          final double itemWidth = size.width;
+    final double itemHeight = size.height/2.3;
+    final double itemWidth = size.width;
     return Scaffold(
         appBar: AppBar(title: Text("Logs Summary"),),
         drawer: MyDrawer(),
