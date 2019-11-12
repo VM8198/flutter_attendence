@@ -14,13 +14,20 @@ class SecondScreen extends StatefulWidget {
   _SecondScreenState createState() => _SecondScreenState();
 }
 
-class _SecondScreenState extends State<SecondScreen> {
+class _SecondScreenState extends State<SecondScreen> with TickerProviderStateMixin {
   bool isClicked = true;
+   AnimationController controller;
+  Animation animation;
 
   @override
   @mustCallSuper
   void initState() {
     super.initState();
+    controller =
+        AnimationController(duration: Duration(seconds: 5), vsync: this);
+
+    animation = CurvedAnimation(parent: controller, curve: Curves.bounceInOut);
+    controller.forward();
     getStatus(); //get status to check attendence filled or not
   }
 
@@ -35,7 +42,7 @@ class _SecondScreenState extends State<SecondScreen> {
       setState(() {
         isClicked = true;
       });
-    }
+    } 
   }
 
   @override
@@ -93,11 +100,6 @@ class _SecondScreenState extends State<SecondScreen> {
                           height: 20,
                           width: 20);
                     if (snapshot.hasData) {
-                      // if (MediaQuery.of(context).orientation == Orientation.landscape) {
-                      //   mode 
-                      // } else {
-                      //   count = 2;
-                      // }
                       var data = snapshot.data;
                       List<dynamic> logs = data.multipleDaysLogs.reversed.toList(); 
                       var size = MediaQuery.of(context).size;
@@ -108,11 +110,13 @@ class _SecondScreenState extends State<SecondScreen> {
                         crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2,
                         padding: EdgeInsets.all(8.0),
                         crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 5.0, 
+                        mainAxisSpacing: 5.0,
                         childAspectRatio: MediaQuery.of(context).orientation == Orientation.landscape ? (1) : (itemWidth/itemHeight) ,                       
                         children: List.generate(logs.length,(index) {
                           return Container(
-                            child: Card(
+                            child: ScaleTransition(
+                              scale: animation,
+                              child: Card(
                             color: Colors.lightGreen[100],
                             elevation: 10,
                             child: InkWell(
@@ -154,8 +158,8 @@ class _SecondScreenState extends State<SecondScreen> {
                                   ),
                                 ],),                                
                               ],
-                          )
-                          )));
+                            )
+                          ))));
                         }),
                       );
                     }
@@ -203,6 +207,13 @@ class _SecondScreenState extends State<SecondScreen> {
       );
     }
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
 
   //show detaild logs
   Widget openDialog(List<TimeLog> timeLog) {

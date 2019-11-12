@@ -3,6 +3,7 @@ import 'classes/attendence.dart';
 import 'services.dart';
 import 'drawer.dart';
 import 'style/loader.dart';
+import 'package:date_format/date_format.dart';
 
 class ShowLogs extends StatefulWidget {
   final Future<String> value;
@@ -14,38 +15,63 @@ class ShowLogs extends StatefulWidget {
   _ShowLogsState createState() => _ShowLogsState();
 }
 
-class _ShowLogsState extends State<ShowLogs> {
+class _ShowLogsState extends State<ShowLogs> with TickerProviderStateMixin {
+
+   AnimationController controller;
+  Animation animation;
+
+  @override
+  @mustCallSuper
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: Duration(seconds: 5), vsync: this);
+
+    animation = CurvedAnimation(parent: controller, curve: Curves.bounceInOut);
+    controller.forward();
+  }
+
   DateTime selectedDate1 = DateTime.now(); //assign todays date to both dates
   DateTime selectedDate2 = DateTime.now();
   String worked = '';
   String toWork = '';
   bool flag = false;
-  String date1ToShow = DateTime.now().subtract(Duration(days: 5)).toString().split(" ")[0];
-  String date2ToShow = DateTime.now().toString().split(" ")[0];
+  String date1ToShow = formatDate(
+          DateTime.now().subtract(Duration(days: 5)), [dd, '-', mm, '-', yyyy])
+      .toString()
+      .split(" ")[0];
+  String date2ToShow = formatDate(DateTime.now(), [dd, '-', mm, '-', yyyy])
+      .toString()
+      .split(" ")[0];
   bool isDate1Selected = false;
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size; 
-    final double itemHeight = size.height/2.3;
+    var size = MediaQuery.of(context).size;
+    final double itemHeight = size.height / 2.3;
     final double itemWidth = size.width;
     return Scaffold(
-        appBar: AppBar(title: Text("Logs Summary"),),
+        appBar: AppBar(
+          title: Text("Logs Summary"),
+        ),
         drawer: MyDrawer(),
         body: Container(
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          // Add one stop for each color. Stops should increase from 0 to 1
-          stops: [0.1, 0.5, 0.7, 0.9],
-            colors: [
-              Colors.indigo[300],
-              Colors.indigo[200],
-              Colors.indigo[100],
-              Colors.indigo[50],
-            ]
-          )
-        ),
+              gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  // Add one stop for each color. Stops should increase from 0 to 1
+                  stops: [
+                0.1,
+                0.5,
+                0.7,
+                0.9
+              ],
+                  colors: [
+                Colors.indigo[300],
+                Colors.indigo[200],
+                Colors.indigo[100],
+                Colors.indigo[50],
+              ])),
           child: Center(
             child: Column(
               children: <Widget>[
@@ -64,21 +90,29 @@ class _ShowLogsState extends State<ShowLogs> {
                                 onPressed: () {
                                   _selectDate1(context);
                                 },
-                                child: Text("Select date 1", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.indigo[800])),
+                                child: Text("Select date 1",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        color: Colors.indigo[800])),
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10),
                               ),
                               IgnorePointer(
                                 //if date 1 is not selected then it is disabled
-                                ignoring: !isDate1Selected ,
+                                ignoring: !isDate1Selected,
                                 child: RaisedButton(
-                                  color:Colors.lightGreen[100],
+                                  color: Colors.lightGreen[100],
                                   textColor: Colors.blueAccent,
                                   onPressed: () {
                                     _selectDate2(context);
                                   },
-                                  child: Text("select date 2", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.indigo[800])),
+                                  child: Text("Select date 2",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: Colors.indigo[800])),
                                 ),
                               )
                             ],
@@ -95,7 +129,11 @@ class _ShowLogsState extends State<ShowLogs> {
                                   padding: EdgeInsets.all(10),
                                   child: Column(
                                     children: <Widget>[
-                                      Text("Logs From "+date1ToShow+" To "+date2ToShow,
+                                      Text(
+                                          "Logs From " +
+                                              date1ToShow +
+                                              " To " +
+                                              date2ToShow,
                                           style: TextStyle(
                                               color: Colors.grey[50],
                                               fontWeight: FontWeight.bold,
@@ -122,12 +160,16 @@ class _ShowLogsState extends State<ShowLogs> {
                                   ),
                                 );
                               }
-                              if (snapshot.hasData) {                                 
+                              if (snapshot.hasData) {
                                 return Container(
                                   padding: EdgeInsets.all(10),
                                   child: Column(
                                     children: <Widget>[
-                                      Text("Logs From "+date1ToShow+" To "+date2ToShow,
+                                      Text(
+                                          "Logs From " +
+                                              date1ToShow +
+                                              " To " +
+                                              date2ToShow,
                                           style: TextStyle(
                                               color: Colors.grey[50],
                                               fontWeight: FontWeight.bold,
@@ -178,59 +220,106 @@ class _ShowLogsState extends State<ShowLogs> {
                         List<dynamic> logs =
                             data.multipleDaysLogs.reversed.toList();
                         return GridView.count(
-                        crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 2,
-                        padding: EdgeInsets.all(8.0),
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 5.0, 
-                        childAspectRatio: MediaQuery.of(context).orientation == Orientation.landscape ? (1) : (itemWidth/itemHeight) ,                        
-                        children: List.generate(logs.length,(index) {
-                          return Container(
-                            child: Card(
-                            color: Colors.lightGreen[100],
-                            elevation: 10,
-                            child: InkWell(
-                              onTap: (){
-                                openDialog(logs[index].timeLog);
-                              },
-                              child:  Column(
-                              children: <Widget>[
-                                Row(children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0,top: 8.0),
-                                    child: Text(logs[index].date.toString().split("T")[0],
-                                      style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.indigo[800]),
-                                    ),
-                                  )
-                                ],),
-                                Row(children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Text(logs[index].day,
-                                      style: TextStyle(fontSize: 15, color: Colors.indigo[800]),
-                                    ),
-                                  )
-                                ],),
-                                Row(children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 15, left: 8.0),
-                                    child: Text("Total Hours :",
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.indigo[800]),
-                                    ),
-                                  )
-                                ],),
-                                Row(children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text(logs[index].difference,
-                                        style: TextStyle(fontSize: 15, color: Colors.indigo[800]),
-                                      ),
-                                  ),
-                                ],),                                
-                              ],
-                          )
-                          )));
-                        }),
-                      );
+                          crossAxisCount: MediaQuery.of(context).orientation ==
+                                  Orientation.landscape
+                              ? 4
+                              : 2,
+                          padding: EdgeInsets.all(8.0),
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 5.0,
+                          childAspectRatio:
+                              MediaQuery.of(context).orientation ==
+                                      Orientation.landscape
+                                  ? (1)
+                                  : (itemWidth / itemHeight),
+                          children: List.generate(logs.length, (index) {
+                            return Container(
+                              child: ScaleTransition(
+                              scale: animation,
+                                child: Card(
+                                    color: Colors.lightGreen[100],
+                                    elevation: 10,
+                                    child: InkWell(
+                                        onTap: () {
+                                          openDialog(logs[index].timeLog);
+                                        },
+                                        child: Column(
+                                          children: <Widget>[
+                                            Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0, top: 8.0),
+                                                  child: Text(
+                                                    logs[index]
+                                                        .date
+                                                        .toString()
+                                                        .split("T")[0],
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            Colors.indigo[800]),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 8.0),
+                                                  child: Text(
+                                                    logs[index].day,
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color:
+                                                            Colors.indigo[800]),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 15, left: 8.0),
+                                                  child: Text(
+                                                    "Total Hours :",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 15,
+                                                        color:
+                                                            Colors.indigo[800]),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0),
+                                                  child: Text(
+                                                    logs[index].difference,
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color:
+                                                            Colors.indigo[800]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )))));
+                          }),
+                        );
                       }
                     },
                   ),
@@ -255,100 +344,106 @@ class _ShowLogsState extends State<ShowLogs> {
         return Scaffold(
             appBar: AppBar(title: Text("Time Logs")),
             body: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    // Add one stop for each color. Stops should increase from 0 to 1
-                    stops: [0.1, 0.5, 0.7, 0.9],
-                      colors: [
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          // Add one stop for each color. Stops should increase from 0 to 1
+                          stops: [
+                        0.1,
+                        0.5,
+                        0.7,
+                        0.9
+                      ],
+                          colors: [
                         Colors.indigo[300],
                         Colors.indigo[200],
                         Colors.indigo[100],
                         Colors.indigo[50],
-                      ] 
-                  )
-                ),
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[],
-                  ),
-                  Expanded(
-                    flex: 0,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 50)),
-                        Table(
-                          children: <TableRow>[
-                            TableRow(children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(bottom: 10),
-                                height: 30,
-                                child: Center(
-                                  child: Text("In",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 30, color: Colors.black)),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 10),
-                                height: 30,
-                                child: Center(
-                                  child: Text("Out",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 30, color: Colors.black)),
-                                ),
-                              )
-                            ])
+                      ])),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[],
+                      ),
+                      Expanded(
+                        flex: 0,
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 50)),
+                            Table(
+                              children: <TableRow>[
+                                TableRow(children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    height: 30,
+                                    child: Center(
+                                      child: Text("In",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.black)),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    height: 30,
+                                    child: Center(
+                                      child: Text("Out",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.black)),
+                                    ),
+                                  )
+                                ])
+                              ],
+                            )
                           ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                      child: ListView.builder(
-                    itemBuilder: (context, position) {
-                      return Table(
-                        children: <TableRow>[
-                          TableRow(
-                            children: <Widget>[
-                              Container(
-                                height: 30,
-                                child: Center(
-                                    child: Text(timeLog[position].inTime,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black))),
+                        ),
+                      ),
+                      Expanded(
+                          child: ListView.builder(
+                        itemBuilder: (context, position) {
+                          return Table(
+                            children: <TableRow>[
+                              TableRow(
+                                children: <Widget>[
+                                  Container(
+                                    height: 30,
+                                    child: Center(
+                                        child: Text(timeLog[position].inTime,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.black))),
+                                  ),
+                                  Container(
+                                    height: 30,
+                                    child: Center(
+                                      child: Text(timeLog[position].outTime,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black)),
+                                    ),
+                                  )
+                                ],
                               ),
-                              Container(
-                                height: 30,
-                                child: Center(
-                                  child: Text(timeLog[position].outTime,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 20, color: Colors.black)),
-                                ),
-                              )
                             ],
-                          ),
-                        ],
-                      );
-                    },
-                    itemCount: timeLog.length,
-                  )),
-                ],
-              ),
-            )));
+                          );
+                        },
+                        itemCount: timeLog.length,
+                      )),
+                    ],
+                  ),
+                )));
       },
     );
   }
@@ -359,10 +454,12 @@ class _ShowLogsState extends State<ShowLogs> {
         initialDate: selectedDate1,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null ){// && picked != selectedDate1) {
+    if (picked != null) {
       selectedDate1 = picked;
       setState(() {
-        date1ToShow = picked.toString().split(" ")[0];
+        date1ToShow = formatDate(picked, [dd, '-', mm, '-', yyyy])
+            .toString()
+            .split(" ")[0];
         isDate1Selected = true;
       });
     }
@@ -375,11 +472,13 @@ class _ShowLogsState extends State<ShowLogs> {
           initialDate: selectedDate2,
           firstDate: DateTime(2015, 8),
           lastDate: DateTime(2101));
-      if (picked != null && picked != selectedDate2){ 
+      if (picked != null && picked != selectedDate2) {
         selectedDate2 = picked;
       }
       setState(() {
-        date2ToShow = picked.toString().split(" ")[0];
+        date2ToShow = formatDate(picked, [dd, '-', mm, '-', yyyy])
+            .toString()
+            .split(" ")[0];
         flag = true;
         isDate1Selected = false;
       });

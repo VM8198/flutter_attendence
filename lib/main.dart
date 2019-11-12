@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: TextField(
+                            child: TextFormField(
                               controller: userNameController,
                               decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.person_outline),
@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: TextField(
+                            child: TextFormField(
                               controller: passwordController,
                               obscureText: true,
                               decoration: InputDecoration(
@@ -189,11 +189,31 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         )));
   }
-
+  
   _login(String uname, String password) async {
-    print("in login");
-    var response = await login(uname, password);
+    if(userNameController.text.isEmpty){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: Text("Username and Password are required"),
+          );
+        },
+      );
+    }else if(passwordController.text.isEmpty){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: Text("Password is required"),
+          );
+        },
+      );
+    }else{
     final prefs = await SharedPreferences.getInstance();
+    var response = await login(uname, password);
     if (response != null) {
       var userId = response.id;
       var uName = response.name != null ? response.name : response.email;
@@ -219,6 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       );
+    }
     }
   }
 }

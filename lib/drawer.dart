@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'showLogs.dart';
 import 'first.dart';
 import 'main.dart';
+import 'profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -99,10 +100,10 @@ class _MyDrawerState extends State<MyDrawer> {
           title: Text('User Profile'),
           onTap: () {
             Navigator.pop(context);
-            //  Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => ProfilePage()),
-            // );
+             Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AnimatedContainerApp()),
+            );
           },
         ),
         ListTile(
