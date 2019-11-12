@@ -47,6 +47,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  bool passwordVisible;
+  @override
+  void initState() {
+    passwordVisible = false;
+  }
+
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
   @override
@@ -126,15 +133,32 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
                               controller: passwordController,
-                              obscureText: true,
+                              obscureText: !passwordVisible,
                               decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.lock_open),
+                                  prefixIcon: Icon(Icons.lock),
                                   hintText: 'Password',
+                                  suffixIcon: IconButton(
+                                  icon: Icon(
+                                    // Based on passwordVisible state choose the icon
+                                    passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                    color: Theme.of(context).primaryColorDark,
+                                    ),
+                                  onPressed: () {
+                                    //toogle the state of passwordVisible variable
+                                    setState(() {
+                                        passwordVisible = !passwordVisible;
+                                    });
+                                  },
+                                  ),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(radius)))),
-                            ),
+                                          
+                            ),                            
                           ),
+                          
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 8),
                           ),
